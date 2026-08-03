@@ -324,15 +324,12 @@ export default function ProductForm({
 
         <div className="space-y-2">
           <label htmlFor="upload_color" className="block text-sm font-medium text-zinc-400">
-            Color de las fotos a subir
+            Color por defecto para las próximas fotos
           </label>
           <select
             id="upload_color"
             value={uploadColor}
-            onChange={(e) => {
-              setUploadColor(e.target.value)
-              setPreviewColors((prev) => prev.map(() => e.target.value || null))
-            }}
+            onChange={(e) => setUploadColor(e.target.value)}
             className={inputCls}
           >
             <option value="">Foto general</option>
@@ -342,6 +339,9 @@ export default function ProductForm({
               </option>
             ))}
           </select>
+          <p className="text-xs text-zinc-600">
+            Después de subir, podés cambiar el color de cada foto individualmente.
+          </p>
         </div>
 
         <input type="hidden" name="image_colors" value={JSON.stringify(previewColors)} />
@@ -349,7 +349,8 @@ export default function ProductForm({
         {previewFiles.length > 0 && (
           <div>
             <p className="mb-2 text-sm text-zinc-400">
-              {previewFiles.length} {previewFiles.length === 1 ? 'foto seleccionada' : 'fotos seleccionadas'}
+              {previewFiles.length} {previewFiles.length === 1 ? 'foto seleccionada' : 'fotos seleccionadas'} · asigná
+              el color de cada una
             </p>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {previewFiles.map((file, i) => (
@@ -359,9 +360,20 @@ export default function ProductForm({
                     alt=""
                     className="aspect-square w-full rounded-t-lg object-cover"
                   />
-                  <p className="truncate rounded-b-lg border-t border-zinc-800 bg-zinc-950 px-2 py-1.5 text-xs text-zinc-400">
-                    {previewColors[i] || 'Foto general'}
-                  </p>
+                  <select
+                    value={previewColors[i] ?? ''}
+                    onChange={(e) =>
+                      setPreviewColors((prev) => prev.map((c, j) => (j === i ? e.target.value || null : c)))
+                    }
+                    className="w-full rounded-b-lg border-0 border-t border-zinc-800 bg-zinc-950 px-2 py-1.5 text-xs text-zinc-300 outline-none focus:bg-zinc-900"
+                  >
+                    <option value="">Foto general</option>
+                    {colors.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
                   <button
                     type="button"
                     onClick={() => removePreview(i)}
