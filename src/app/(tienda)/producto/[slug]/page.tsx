@@ -65,11 +65,11 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
                 width={800}
                 height={1000}
                 priority={i === 0}
-                className="aspect-[4/5] w-full rounded-2xl object-cover"
+                className="aspect-[4/5] w-full rounded-2xl border border-zinc-800 object-cover"
               />
             ))
           ) : (
-            <div className="flex aspect-[4/5] w-full items-center justify-center rounded-2xl bg-zinc-100 text-4xl text-zinc-300">
+            <div className="flex aspect-[4/5] w-full items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900 text-4xl text-zinc-700">
               ◇
             </div>
           )}
@@ -78,15 +78,17 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
         {/* INFO + COMPRA */}
         <div>
           {category && (
-            <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400">
+            <p className="text-xs font-semibold uppercase tracking-widest text-red-500">
               {category.name}
             </p>
           )}
-          <h1 className="mt-2 text-3xl font-bold tracking-tight">{product.name}</h1>
-          <p className="mt-3 text-2xl font-semibold">{formatPrice(Number(product.price))}</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-white">{product.name}</h1>
+          <p className="mt-3 text-2xl font-semibold text-red-500">
+            {formatPrice(Number(product.price))}
+          </p>
 
           {product.description && (
-            <p className="mt-6 whitespace-pre-line text-sm leading-relaxed text-zinc-600">
+            <p className="mt-6 whitespace-pre-line text-sm leading-relaxed text-zinc-400">
               {product.description}
             </p>
           )}
@@ -102,8 +104,8 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
             images={images ?? []}
           />
 
-          <div className="mt-8 rounded-xl border border-zinc-200 bg-white p-4 text-sm text-zinc-600">
-            <p className="font-semibold text-zinc-900">¿Cómo comprar?</p>
+          <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900 p-4 text-sm text-zinc-400">
+            <p className="font-semibold text-white">¿Cómo comprar?</p>
             <ol className="mt-2 list-decimal space-y-1 pl-5">
               <li>Elegí color, talle y cantidad.</li>
               <li>Agregá al carrito lo que quieras.</li>

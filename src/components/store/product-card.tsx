@@ -13,9 +13,9 @@ export function ProductCard({ product }: { product: CardProduct }) {
   return (
     <Link
       href={`/producto/${product.slug}`}
-      className="group block overflow-hidden rounded-xl bg-white transition hover:shadow-lg"
+      className="group block overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 transition hover:border-red-600/60 hover:shadow-lg hover:shadow-red-950/40"
     >
-      <div className="aspect-[4/5] overflow-hidden bg-zinc-100">
+      <div className="aspect-[4/5] overflow-hidden bg-zinc-950">
         {product.image ? (
           <Image
             src={product.image}
@@ -25,12 +25,12 @@ export function ProductCard({ product }: { product: CardProduct }) {
             className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-3xl text-zinc-300">◇</div>
+          <div className="flex h-full items-center justify-center text-3xl text-zinc-700">◇</div>
         )}
       </div>
       <div className="p-4">
-        <p className="line-clamp-1 font-medium">{product.name}</p>
-        <p className="mt-1 text-sm text-zinc-500">{formatPrice(product.price)}</p>
+        <p className="line-clamp-1 font-medium text-white">{product.name}</p>
+        <p className="mt-1 text-sm font-semibold text-red-500">{formatPrice(product.price)}</p>
       </div>
     </Link>
   )

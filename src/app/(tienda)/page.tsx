@@ -19,7 +19,7 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
   let query = supabase
     .from('products')
     .select(
-      'id, slug, name, price, category_id, category!inner(slug), images(url)',
+      'id, slug, name, price, category_id, category!inner(slug), images:product_images(url)',
       { count: 'exact' }
     )
     .eq('active', true)
@@ -34,30 +34,34 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
   return (
     <main>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-zinc-950">
+      <section className="relative overflow-hidden bg-black">
         {settings.banner_url ? (
           <Image
             src={settings.banner_url}
             alt=""
             fill
             priority
-            className="object-cover opacity-60"
+            className="object-cover opacity-50"
             sizes="100vw"
           />
         ) : null}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[480px] w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-600/20 blur-[140px]"
+        />
         <div className="relative mx-auto flex max-w-6xl flex-col items-center px-4 py-28 text-center lg:px-8">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-red-500">
             Nueva temporada
           </p>
           <h1 className="max-w-2xl text-4xl font-extrabold uppercase tracking-tight text-white sm:text-6xl">
-            alt0<span className="text-zinc-500">volta</span>
+            alt0<span className="text-red-600">volta</span>
           </h1>
           <p className="mt-4 max-w-xl text-zinc-300">
             {settings.about_text || 'Ropa con actitud. Elegí tus prendas y pedí directo por WhatsApp.'}
           </p>
           <a
             href="#tienda"
-            className="mt-8 rounded-full bg-white px-8 py-3 text-sm font-bold uppercase tracking-wide text-zinc-950 transition hover:bg-zinc-200"
+            className="mt-8 rounded-full bg-red-600 px-8 py-3 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
           >
             Ver catálogo
           </a>
@@ -72,8 +76,8 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
             className={cn(
               'rounded-full border px-4 py-1.5 text-sm font-medium transition',
               !cat
-                ? 'border-zinc-950 bg-zinc-950 text-white'
-                : 'border-zinc-300 text-zinc-600 hover:border-zinc-950 hover:text-zinc-950'
+                ? 'border-red-600 bg-red-600 text-white'
+                : 'border-zinc-700 text-zinc-300 hover:border-red-600 hover:text-white'
             )}
           >
             Todos
@@ -85,8 +89,8 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
               className={cn(
                 'rounded-full border px-4 py-1.5 text-sm font-medium transition',
                 cat === c.slug
-                  ? 'border-zinc-950 bg-zinc-950 text-white'
-                  : 'border-zinc-300 text-zinc-600 hover:border-zinc-950 hover:text-zinc-950'
+                  ? 'border-red-600 bg-red-600 text-white'
+                  : 'border-zinc-700 text-zinc-300 hover:border-red-600 hover:text-white'
               )}
             >
               {c.name}
@@ -96,14 +100,14 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
 
         {!products || products.length === 0 ? (
           <div className="py-24 text-center">
-            <p className="text-lg font-semibold">Sin productos por ahora</p>
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="text-lg font-semibold text-white">Sin productos por ahora</p>
+            <p className="mt-1 text-sm text-zinc-400">
               {cat ? 'No hay prendas en esta categoría todavía.' : 'El catálogo se está cargando. ¡Volvé pronto!'}
             </p>
           </div>
         ) : (
           <>
-            <p className="mt-6 text-sm text-zinc-500">
+            <p className="mt-6 text-sm text-zinc-400">
               {count} {count === 1 ? 'prenda' : 'prendas'}
             </p>
             <div className="mt-4 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">

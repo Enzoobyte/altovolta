@@ -16,39 +16,39 @@ export async function StoreFooter() {
     `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent('¡Hola Altovolta! 👋')}`
 
   return (
-    <footer className="border-t border-zinc-200 bg-zinc-950 text-zinc-300">
+    <footer className="border-t border-zinc-800 bg-black text-zinc-400">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-3 lg:px-8">
         <div>
           <p className="text-lg font-extrabold uppercase tracking-tight text-white">
-            alt0<span className="text-zinc-500">volta</span>
+            alt0<span className="text-red-600">volta</span>
           </p>
           {settings.about_text && (
-            <p className="mt-3 text-sm leading-relaxed text-zinc-400">{settings.about_text}</p>
+            <p className="mt-3 text-sm leading-relaxed text-zinc-500">{settings.about_text}</p>
           )}
         </div>
 
         <div>
-          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-500">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-600">
             Navegación
           </p>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/" className="hover:text-white">
+              <Link href="/" className="transition hover:text-red-500">
                 Inicio
               </Link>
             </li>
             <li>
-              <Link href="/#tienda" className="hover:text-white">
+              <Link href="/#tienda" className="transition hover:text-red-500">
                 Tienda
               </Link>
             </li>
             <li>
-              <Link href="/carrito" className="hover:text-white">
+              <Link href="/carrito" className="transition hover:text-red-500">
                 Carrito
               </Link>
             </li>
             <li>
-              <Link href="/contacto" className="hover:text-white">
+              <Link href="/contacto" className="transition hover:text-red-500">
                 Contacto
               </Link>
             </li>
@@ -56,32 +56,42 @@ export async function StoreFooter() {
         </div>
 
         <div>
-          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-500">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-zinc-600">
             Seguinos
           </p>
           <ul className="space-y-2 text-sm">
             {whatsappUrl && (
               <li>
-                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:text-white">
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition hover:text-red-500"
+                >
                   WhatsApp
                 </a>
               </li>
             )}
             {socials.map((s) => (
               <li key={s.label}>
-                <a href={s.url} target="_blank" rel="noopener noreferrer" className="hover:text-white">
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition hover:text-red-500"
+                >
                   {s.label}
                 </a>
               </li>
             ))}
             {socials.length === 0 && !whatsappUrl && (
-              <li className="text-zinc-500">Próximamente en redes</li>
+              <li className="text-zinc-600">Próximamente en redes</li>
             )}
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-zinc-800 py-4 text-center text-xs text-zinc-500">
+      <div className="border-t border-zinc-800 py-4 text-center text-xs text-zinc-600">
         © {year} {settings.site_name} · Pedidos por WhatsApp
       </div>
     </footer>

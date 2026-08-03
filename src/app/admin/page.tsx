@@ -31,10 +31,10 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Resumen</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-white">Resumen</h1>
         <Link
           href="/admin/productos/nuevo"
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-700"
+          className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500"
         >
           + Nuevo producto
         </Link>
@@ -45,27 +45,27 @@ export default async function AdminDashboardPage() {
           <Link
             key={card.label}
             href={card.href}
-            className="rounded-xl border border-zinc-200 bg-white p-5 transition hover:border-zinc-300"
+            className="rounded-xl border border-zinc-800 bg-zinc-900 p-5 transition hover:border-red-600/60"
           >
-            <p className="text-3xl font-bold tracking-tight">{card.value}</p>
-            <p className="mt-1 text-sm text-zinc-500">{card.label}</p>
+            <p className="text-3xl font-bold tracking-tight text-white">{card.value}</p>
+            <p className="mt-1 text-sm text-zinc-400">{card.label}</p>
           </Link>
         ))}
       </div>
 
-      <section className="rounded-xl border border-zinc-200 bg-white p-5">
-        <h2 className="mb-4 font-semibold">Stock bajo (&lt; 6 unidades)</h2>
+      <section className="rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+        <h2 className="mb-4 font-semibold text-white">Stock bajo (&lt; 6 unidades)</h2>
         {lowStock && lowStock.length > 0 ? (
           <div className="space-y-2">
             {lowStock.map((v, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between rounded-lg bg-zinc-50 px-4 py-2 text-sm"
+                className="flex items-center justify-between rounded-lg bg-zinc-950 px-4 py-2 text-sm"
               >
-                <span>
+                <span className="text-zinc-300">
                   {v.color} / {v.size}
                 </span>
-                <span className={v.stock === 0 ? 'font-semibold text-red-600' : 'text-amber-600'}>
+                <span className={v.stock === 0 ? 'font-semibold text-red-500' : 'text-amber-500'}>
                   {v.stock} u.
                 </span>
               </div>

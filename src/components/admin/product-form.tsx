@@ -9,6 +9,10 @@ import { slugify } from '@/lib/utils'
 
 type StockMatrix = Record<string, Record<string, number>>
 
+const inputCls =
+  'w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white placeholder-zinc-600 outline-none focus:border-red-600'
+const labelCls = 'mb-1 block text-sm font-medium text-zinc-400'
+
 export default function ProductForm({
   categories,
   product,
@@ -143,17 +147,17 @@ export default function ProductForm({
       {product && <input type="hidden" name="id" value={product.id} />}
 
       {error && (
-        <p className="rounded-lg border border-red-800 bg-red-950 px-3 py-2 text-sm text-red-300">
+        <p className="rounded-lg border border-red-900 bg-red-950 px-3 py-2 text-sm text-red-400">
           {error}
         </p>
       )}
 
       {/* Datos básicos */}
-      <section className="space-y-4 rounded-xl border border-zinc-200 bg-white p-5">
-        <h2 className="font-semibold">Datos básicos</h2>
+      <section className="space-y-4 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+        <h2 className="font-semibold text-white">Datos básicos</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="name" className="mb-1 block text-sm font-medium text-zinc-600">
+            <label htmlFor="name" className={labelCls}>
               Nombre *
             </label>
             <input
@@ -165,12 +169,12 @@ export default function ProductForm({
                 setName(e.target.value)
                 if (!slugTouched) setSlug(slugify(e.target.value))
               }}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+              className={inputCls}
               placeholder="Ej: Buzo Oversize Algodón"
             />
           </div>
           <div>
-            <label htmlFor="slug" className="mb-1 block text-sm font-medium text-zinc-600">
+            <label htmlFor="slug" className={labelCls}>
               URL (slug)
             </label>
             <input
@@ -181,12 +185,12 @@ export default function ProductForm({
                 setSlug(slugify(e.target.value))
                 setSlugTouched(true)
               }}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+              className={inputCls}
               placeholder="buzo-oversize-algodon"
             />
           </div>
           <div>
-            <label htmlFor="price" className="mb-1 block text-sm font-medium text-zinc-600">
+            <label htmlFor="price" className={labelCls}>
               Precio ($) *
             </label>
             <input
@@ -197,19 +201,19 @@ export default function ProductForm({
               step="0.01"
               required
               defaultValue={product?.price ?? ''}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+              className={inputCls}
               placeholder="45000"
             />
           </div>
           <div>
-            <label htmlFor="category_id" className="mb-1 block text-sm font-medium text-zinc-600">
+            <label htmlFor="category_id" className={labelCls}>
               Categoría
             </label>
             <select
               id="category_id"
               name="category_id"
               defaultValue={product?.category_id ?? ''}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+              className={inputCls}
             >
               <option value="">Sin categoría</option>
               {categories.map((c) => (
@@ -220,7 +224,7 @@ export default function ProductForm({
             </select>
           </div>
           <div className="sm:col-span-2">
-            <label htmlFor="description" className="mb-1 block text-sm font-medium text-zinc-600">
+            <label htmlFor="description" className={labelCls}>
               Descripción
             </label>
             <textarea
@@ -228,20 +232,25 @@ export default function ProductForm({
               name="description"
               rows={3}
               defaultValue={product?.description ?? ''}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+              className={inputCls}
               placeholder="Composición, tela, cuidado…"
             />
           </div>
         </div>
-        <label className="flex items-center gap-2 text-sm font-medium text-zinc-600">
-          <input type="checkbox" name="active" defaultChecked={product?.active ?? true} className="h-4 w-4" />
+        <label className="flex items-center gap-2 text-sm font-medium text-zinc-300">
+          <input
+            type="checkbox"
+            name="active"
+            defaultChecked={product?.active ?? true}
+            className="h-4 w-4 accent-red-600"
+          />
           Visible en la tienda
         </label>
       </section>
 
       {/* Fotos */}
-      <section className="space-y-4 rounded-xl border border-zinc-200 bg-white p-5">
-        <h2 className="font-semibold">Fotos</h2>
+      <section className="space-y-4 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+        <h2 className="font-semibold text-white">Fotos</h2>
 
         {product && product.images.length > 0 && (
           <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
@@ -252,7 +261,7 @@ export default function ProductForm({
                   alt=""
                   width={200}
                   height={200}
-                  className="aspect-square w-full rounded-lg border border-zinc-200 object-cover"
+                  className="aspect-square w-full rounded-lg border border-zinc-800 object-cover"
                 />
                 <button
                   type="button"
@@ -266,10 +275,10 @@ export default function ProductForm({
           </div>
         )}
 
-        <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-300 py-8 text-sm text-zinc-500 transition hover:border-zinc-400 hover:bg-zinc-50">
+        <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-700 py-8 text-sm text-zinc-500 transition hover:border-red-600 hover:bg-zinc-950">
           <span className="text-2xl">＋</span>
           <span className="mt-1 font-medium">Subir fotos desde este dispositivo</span>
-          <span className="text-xs text-zinc-400">JPG, PNG, WEBP · hasta 5 MB</span>
+          <span className="text-xs text-zinc-600">JPG, PNG, WEBP · hasta 5 MB</span>
           <input
             type="file"
             name="images"
@@ -287,7 +296,7 @@ export default function ProductForm({
                 key={i}
                 src={URL.createObjectURL(file)}
                 alt=""
-                className="aspect-square w-full rounded-lg border border-zinc-200 object-cover"
+                className="aspect-square w-full rounded-lg border border-zinc-800 object-cover"
               />
             ))}
           </div>
@@ -295,25 +304,25 @@ export default function ProductForm({
       </section>
 
       {/* Variantes: color × talle → stock */}
-      <section className="space-y-4 rounded-xl border border-zinc-200 bg-white p-5">
-        <h2 className="font-semibold">Stock por color y talle</h2>
+      <section className="space-y-4 rounded-xl border border-zinc-800 bg-zinc-900 p-5">
+        <h2 className="font-semibold text-white">Stock por color y talle</h2>
         <input type="hidden" name="variants" value={variantsJson} />
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-600">Colores</label>
+            <label className={labelCls}>Colores</label>
             <div className="flex gap-2">
               <input
                 value={newColor}
                 onChange={(e) => setNewColor(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addColor())}
                 placeholder="Ej: Negro"
-                className="flex-1 rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+                className={inputCls}
               />
               <button
                 type="button"
                 onClick={addColor}
-                className="rounded-lg bg-zinc-900 px-3 py-2 text-sm font-semibold text-white"
+                className="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-500"
               >
                 +
               </button>
@@ -323,7 +332,7 @@ export default function ProductForm({
                 {colors.map((color) => (
                   <span
                     key={color}
-                    className="flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 py-1 pl-1 pr-2 text-sm"
+                    className="flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-950 py-1 pl-1 pr-2 text-sm text-zinc-300"
                   >
                     <input
                       type="color"
@@ -333,7 +342,7 @@ export default function ProductForm({
                       title={`Color de ${color}`}
                     />
                     {color}
-                    <button type="button" onClick={() => removeColor(color)} className="text-zinc-400 hover:text-red-500">
+                    <button type="button" onClick={() => removeColor(color)} className="text-zinc-500 hover:text-red-500">
                       ✕
                     </button>
                   </span>
@@ -343,19 +352,19 @@ export default function ProductForm({
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-600">Talles</label>
+            <label className={labelCls}>Talles</label>
             <div className="flex gap-2">
               <input
                 value={newSize}
                 onChange={(e) => setNewSize(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addSize())}
                 placeholder="Ej: M"
-                className="flex-1 rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+                className={inputCls}
               />
               <button
                 type="button"
                 onClick={addSize}
-                className="rounded-lg bg-zinc-900 px-3 py-2 text-sm font-semibold text-white"
+                className="rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-500"
               >
                 +
               </button>
@@ -365,10 +374,10 @@ export default function ProductForm({
                 {sizes.map((size) => (
                   <span
                     key={size}
-                    className="flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-sm"
+                    className="flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-950 px-3 py-1 text-sm text-zinc-300"
                   >
                     {size}
-                    <button type="button" onClick={() => removeSize(size)} className="text-zinc-400 hover:text-red-500">
+                    <button type="button" onClick={() => removeSize(size)} className="text-zinc-500 hover:text-red-500">
                       ✕
                     </button>
                   </span>
@@ -382,7 +391,7 @@ export default function ProductForm({
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-zinc-200 text-left text-zinc-500">
+                <tr className="border-b border-zinc-700 text-left text-zinc-500">
                   <th className="py-2 pr-4 font-medium">Color</th>
                   {sizes.map((size) => (
                     <th key={size} className="px-2 py-2 text-center font-medium">
@@ -393,10 +402,10 @@ export default function ProductForm({
               </thead>
               <tbody>
                 {colors.map((color) => (
-                  <tr key={color} className="border-b border-zinc-100">
-                    <td className="flex items-center gap-2 py-2 pr-4">
+                  <tr key={color} className="border-b border-zinc-800">
+                    <td className="flex items-center gap-2 py-2 pr-4 text-zinc-300">
                       <span
-                        className="h-4 w-4 rounded-full border border-zinc-300"
+                        className="h-4 w-4 rounded-full border border-zinc-600"
                         style={{ backgroundColor: colorHex[color] || '#000000' }}
                       />
                       {color}
@@ -408,7 +417,7 @@ export default function ProductForm({
                           min="0"
                           value={stock[color]?.[size] ?? 0}
                           onChange={(e) => setStockCell(color, size, Math.max(0, Number(e.target.value) || 0))}
-                          className="w-20 rounded-lg border border-zinc-300 px-2 py-1.5 text-center outline-none focus:border-zinc-500"
+                          className="w-20 rounded-lg border border-zinc-700 bg-zinc-950 px-2 py-1.5 text-center text-white outline-none focus:border-red-600"
                         />
                       </td>
                     ))}
@@ -418,7 +427,7 @@ export default function ProductForm({
             </table>
           </div>
         ) : (
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-zinc-500">
             Agregá al menos un color y un talle para cargar el stock.
           </p>
         )}
@@ -428,14 +437,14 @@ export default function ProductForm({
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-lg border border-zinc-300 px-5 py-2.5 text-sm font-medium text-zinc-600"
+          className="rounded-lg border border-zinc-700 px-5 py-2.5 text-sm font-medium text-zinc-300 transition hover:bg-zinc-800"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-700 disabled:opacity-50"
+          className="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-500 disabled:opacity-50"
         >
           {isPending ? 'Guardando…' : product ? 'Guardar cambios' : 'Crear producto'}
         </button>

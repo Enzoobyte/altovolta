@@ -37,6 +37,7 @@ export function ProductBuyer({
   const [quantity, setQuantity] = useState(1)
   const [added, setAdded] = useState(false)
 
+  // Talles disponibles SOLO para el color elegido
   const sizesForColor = useMemo(() => {
     if (!selectedColor) return []
     return variants
@@ -88,7 +89,7 @@ export function ProductBuyer({
     <div className="mt-8 space-y-6">
       {/* COLOR */}
       <div>
-        <p className="mb-2 text-sm font-semibold uppercase tracking-wide">
+        <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-300">
           Color{selectedColor ? `: ${selectedColor}` : ' *'}
         </p>
         <div className="flex flex-wrap gap-2">
@@ -100,12 +101,12 @@ export function ProductBuyer({
               className={cn(
                 'flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition',
                 selectedColor === color
-                  ? 'border-zinc-950 bg-zinc-950 text-white'
-                  : 'border-zinc-300 bg-white text-zinc-700 hover:border-zinc-950'
+                  ? 'border-red-600 bg-red-600/10 text-white'
+                  : 'border-zinc-700 bg-zinc-900 text-zinc-300 hover:border-red-600'
               )}
             >
               <span
-                className="h-4 w-4 rounded-full border border-black/10"
+                className="h-4 w-4 rounded-full border border-white/20"
                 style={{ backgroundColor: hex }}
               />
               {color}
@@ -114,9 +115,9 @@ export function ProductBuyer({
         </div>
       </div>
 
-      {/* TALLE */}
+      {/* TALLE — según el color elegido */}
       <div>
-        <p className="mb-2 text-sm font-semibold uppercase tracking-wide">
+        <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-300">
           Talle{selectedSize ? `: ${selectedSize}` : ' *'}
         </p>
         <div className="flex flex-wrap gap-2">
@@ -129,10 +130,10 @@ export function ProductBuyer({
               className={cn(
                 'min-w-12 rounded-lg border px-4 py-2 text-sm font-medium transition',
                 v.stock === 0
-                  ? 'cursor-not-allowed border-zinc-200 bg-zinc-100 text-zinc-400 line-through'
+                  ? 'cursor-not-allowed border-zinc-800 bg-zinc-950 text-zinc-600 line-through'
                   : selectedSize === v.size
-                    ? 'border-zinc-950 bg-zinc-950 text-white'
-                    : 'border-zinc-300 bg-white text-zinc-700 hover:border-zinc-950'
+                    ? 'border-red-600 bg-red-600 text-white'
+                    : 'border-zinc-700 bg-zinc-900 text-zinc-200 hover:border-red-600'
               )}
             >
               {v.size}
@@ -140,32 +141,32 @@ export function ProductBuyer({
           ))}
         </div>
         {selectedColor && sizesForColor.length === 0 && (
-          <p className="mt-2 text-sm text-zinc-400">Este color no tiene talles cargados.</p>
+          <p className="mt-2 text-sm text-zinc-500">Este color no tiene talles cargados.</p>
         )}
       </div>
 
       {/* CANTIDAD */}
       {selectedVariant && maxStock > 0 && (
         <div className="flex items-center gap-4">
-          <p className="text-sm font-semibold uppercase tracking-wide">Cantidad</p>
-          <div className="flex items-center rounded-full border border-zinc-300 bg-white">
+          <p className="text-sm font-semibold uppercase tracking-wide text-zinc-300">Cantidad</p>
+          <div className="flex items-center rounded-full border border-zinc-700 bg-zinc-900">
             <button
               type="button"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="px-4 py-2 text-lg font-medium hover:text-zinc-500"
+              className="px-4 py-2 text-lg font-medium text-zinc-200 hover:text-red-500"
             >
               −
             </button>
-            <span className="w-8 text-center font-semibold">{quantity}</span>
+            <span className="w-8 text-center font-semibold text-white">{quantity}</span>
             <button
               type="button"
               onClick={() => setQuantity((q) => Math.min(maxStock, q + 1))}
-              className="px-4 py-2 text-lg font-medium hover:text-zinc-500"
+              className="px-4 py-2 text-lg font-medium text-zinc-200 hover:text-red-500"
             >
               +
             </button>
           </div>
-          <span className="text-sm text-zinc-500">{maxStock} disponibles</span>
+          <span className="text-sm text-zinc-400">{maxStock} disponibles</span>
         </div>
       )}
 
@@ -175,7 +176,7 @@ export function ProductBuyer({
           type="button"
           disabled={!selectedColor || !selectedSize || maxStock === 0}
           onClick={() => addToCart(false)}
-          className="flex-1 rounded-full bg-zinc-950 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex-1 rounded-full bg-red-600 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {added ? '✓ Agregado al carrito' : 'Agregar al carrito'}
         </button>
@@ -183,15 +184,16 @@ export function ProductBuyer({
           type="button"
           disabled={!selectedColor || !selectedSize || maxStock === 0}
           onClick={() => addToCart(true)}
-          className="rounded-full border border-zinc-950 py-3.5 text-sm font-bold uppercase tracking-wide text-zinc-950 transition hover:bg-zinc-950 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-full border border-red-600 py-3.5 text-sm font-bold uppercase tracking-wide text-red-500 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
         >
           Comprar ahora
         </button>
       </div>
 
       {selectedVariant && maxStock > 0 && (
-        <p className="text-sm text-zinc-600">
-          Subtotal: <span className="font-semibold">{formatPrice(product.price * quantity)}</span>
+        <p className="text-sm text-zinc-400">
+          Subtotal:{' '}
+          <span className="font-semibold text-red-500">{formatPrice(product.price * quantity)}</span>
         </p>
       )}
     </div>

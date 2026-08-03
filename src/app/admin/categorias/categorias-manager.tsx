@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation'
 import { createCategory, deleteCategory, updateCategory } from '../actions'
 import type { Category } from '@/lib/types'
 
+const inputCls =
+  'w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white placeholder-zinc-600 outline-none focus:border-red-600'
+
 export default function CategoriesManager({
   categories,
 }: {
@@ -32,14 +35,14 @@ export default function CategoriesManager({
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">Categorías</h1>
+      <h1 className="text-2xl font-bold tracking-tight text-white">Categorías</h1>
 
       <form
         action={run(createCategory)}
-        className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 sm:flex-row sm:items-end"
+        className="flex flex-col gap-3 rounded-xl border border-zinc-800 bg-zinc-900 p-5 sm:flex-row sm:items-end"
       >
         <div className="flex-1">
-          <label htmlFor="name" className="mb-1 block text-sm font-medium text-zinc-600">
+          <label htmlFor="name" className="mb-1 block text-sm font-medium text-zinc-400">
             Nueva categoría
           </label>
           <input
@@ -47,11 +50,11 @@ export default function CategoriesManager({
             name="name"
             required
             placeholder="Ej: Remeras"
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+            className={inputCls}
           />
         </div>
         <div className="w-full sm:w-32">
-          <label htmlFor="sort_order" className="mb-1 block text-sm font-medium text-zinc-600">
+          <label htmlFor="sort_order" className="mb-1 block text-sm font-medium text-zinc-400">
             Orden
           </label>
           <input
@@ -59,29 +62,29 @@ export default function CategoriesManager({
             name="sort_order"
             type="number"
             defaultValue={0}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+            className={inputCls}
           />
         </div>
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-700 disabled:opacity-50"
+          className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500 disabled:opacity-50"
         >
           Crear
         </button>
       </form>
 
       {error && (
-        <p className="rounded-lg border border-red-800 bg-red-950 px-3 py-2 text-sm text-red-300">
+        <p className="rounded-lg border border-red-900 bg-red-950 px-3 py-2 text-sm text-red-400">
           {error}
         </p>
       )}
 
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900">
         {categories.length === 0 ? (
           <p className="p-5 text-sm text-zinc-500">Todavía no hay categorías.</p>
         ) : (
-          <ul className="divide-y divide-zinc-100">
+          <ul className="divide-y divide-zinc-800">
             {categories.map((category) =>
               editingId === category.id ? (
                 <li key={category.id} className="p-4">
@@ -91,35 +94,35 @@ export default function CategoriesManager({
                   >
                     <input type="hidden" name="id" value={category.id} />
                     <div className="flex-1">
-                      <label className="mb-1 block text-sm font-medium text-zinc-600">Nombre</label>
+                      <label className="mb-1 block text-sm font-medium text-zinc-400">Nombre</label>
                       <input
                         name="name"
                         required
                         defaultValue={category.name}
-                        className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+                        className={inputCls}
                       />
                     </div>
                     <div className="w-full sm:w-32">
-                      <label className="mb-1 block text-sm font-medium text-zinc-600">Orden</label>
+                      <label className="mb-1 block text-sm font-medium text-zinc-400">Orden</label>
                       <input
                         name="sort_order"
                         type="number"
                         defaultValue={category.sort_order}
-                        className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500"
+                        className={inputCls}
                       />
                     </div>
                     <div className="flex gap-2">
                       <button
                         type="submit"
                         disabled={isPending}
-                        className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                        className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500 disabled:opacity-50"
                       >
                         Guardar
                       </button>
                       <button
                         type="button"
                         onClick={() => setEditingId(null)}
-                        className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-600"
+                        className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-medium text-zinc-300 transition hover:bg-zinc-800"
                       >
                         Cancelar
                       </button>
@@ -129,15 +132,15 @@ export default function CategoriesManager({
               ) : (
                 <li key={category.id} className="flex items-center justify-between p-4">
                   <div>
-                    <p className="font-medium">{category.name}</p>
-                    <p className="text-xs text-zinc-400">
+                    <p className="font-medium text-white">{category.name}</p>
+                    <p className="text-xs text-zinc-500">
                       /{category.slug} · orden {category.sort_order}
                     </p>
                   </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => setEditingId(category.id)}
-                      className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-600 hover:bg-zinc-50"
+                      className="rounded-lg border border-zinc-700 px-3 py-1.5 text-sm font-medium text-zinc-300 transition hover:border-zinc-500 hover:bg-zinc-800"
                     >
                       Editar
                     </button>
@@ -152,7 +155,7 @@ export default function CategoriesManager({
                       <input type="hidden" name="id" value={category.id} />
                       <button
                         type="submit"
-                        className="rounded-lg border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
+                        className="rounded-lg border border-red-900 px-3 py-1.5 text-sm font-medium text-red-500 transition hover:bg-red-950"
                       >
                         Eliminar
                       </button>

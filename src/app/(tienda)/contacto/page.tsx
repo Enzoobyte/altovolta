@@ -31,11 +31,11 @@ export default async function ContactPage() {
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-14 lg:px-8">
-      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">Contacto</p>
-      <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-        Hablá con <span className="text-zinc-400">altovolta</span>
+      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-red-500">Contacto</p>
+      <h1 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Hablá con <span className="text-red-600">altovolta</span>
       </h1>
-      <p className="mt-3 max-w-lg text-zinc-600">
+      <p className="mt-3 max-w-lg text-zinc-400">
         Consultas, talles, stock y pedidos personalizados. Respondemos por los canales de abajo.
       </p>
 
@@ -45,16 +45,16 @@ export default async function ContactPage() {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group rounded-2xl border border-zinc-200 bg-white p-6 transition hover:border-emerald-400 hover:shadow-lg"
+            className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition hover:border-red-600 hover:shadow-lg hover:shadow-red-950/40"
           >
             <span className="text-2xl">💬</span>
-            <p className="mt-3 font-bold">WhatsApp</p>
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-3 font-bold text-white">WhatsApp</p>
+            <p className="mt-1 text-sm text-zinc-400">
               {settings.whatsapp_number
                 ? `+${settings.whatsapp_number.replace(/(\d{2})(\d{3})(\d{3})(\d{4})/, '$1 $2 $3 $4')}`
                 : 'Chateá con el local'}
             </p>
-            <p className="mt-2 text-sm font-medium text-emerald-600 group-hover:underline">
+            <p className="mt-2 text-sm font-medium text-red-500 group-hover:underline">
               Escribinos →
             </p>
           </a>
@@ -63,20 +63,22 @@ export default async function ContactPage() {
         {settings.email && (
           <a
             href={`mailto:${settings.email}`}
-            className="group rounded-2xl border border-zinc-200 bg-white p-6 transition hover:border-zinc-950 hover:shadow-lg"
+            className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition hover:border-red-600 hover:shadow-lg hover:shadow-red-950/40"
           >
             <span className="text-2xl">✉️</span>
-            <p className="mt-3 font-bold">Email</p>
-            <p className="mt-1 text-sm text-zinc-500">{settings.email}</p>
-            <p className="mt-2 text-sm font-medium group-hover:underline">Enviar mail →</p>
+            <p className="mt-3 font-bold text-white">Email</p>
+            <p className="mt-1 text-sm text-zinc-400">{settings.email}</p>
+            <p className="mt-2 text-sm font-medium text-red-500 group-hover:underline">
+              Enviar mail →
+            </p>
           </a>
         )}
 
         {settings.address && (
-          <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
             <span className="text-2xl">📍</span>
-            <p className="mt-3 font-bold">El local</p>
-            <p className="mt-1 text-sm text-zinc-500">{settings.address}</p>
+            <p className="mt-3 font-bold text-white">El local</p>
+            <p className="mt-1 text-sm text-zinc-400">{settings.address}</p>
           </div>
         )}
 
@@ -86,12 +88,16 @@ export default async function ContactPage() {
             href={s.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group rounded-2xl border border-zinc-200 bg-white p-6 transition hover:border-zinc-950 hover:shadow-lg"
+            className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition hover:border-red-600 hover:shadow-lg hover:shadow-red-950/40"
           >
             <span className="text-2xl">{s.icon}</span>
-            <p className="mt-3 font-bold">{s.label}</p>
-            <p className="mt-1 break-all text-sm text-zinc-500">{s.url.replace(/^https?:\/\//, '')}</p>
-            <p className="mt-2 text-sm font-medium group-hover:underline">Seguir →</p>
+            <p className="mt-3 font-bold text-white">{s.label}</p>
+            <p className="mt-1 break-all text-sm text-zinc-400">
+              {s.url.replace(/^https?:\/\//, '')}
+            </p>
+            <p className="mt-2 text-sm font-medium text-red-500 group-hover:underline">
+              Seguir →
+            </p>
           </a>
         ))}
       </div>
