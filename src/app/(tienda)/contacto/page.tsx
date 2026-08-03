@@ -76,7 +76,7 @@ export default async function ContactPage() {
             href={`mailto:${settings.email}`}
             className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition hover:border-red-600 hover:shadow-lg hover:shadow-red-950/40"
           >
-            <span className="text-2xl">✉️</span>
+            <span className="text-2xl">📧</span>
             <p className="mt-3 font-bold text-white">Email</p>
             <p className="mt-1 text-sm text-zinc-400">{settings.email}</p>
             <p className="mt-2 text-sm font-medium text-red-500 group-hover:underline">

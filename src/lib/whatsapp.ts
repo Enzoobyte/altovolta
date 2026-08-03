@@ -19,7 +19,7 @@ export function buildWhatsAppMessage(items: CartItem[], siteName: string): strin
   const total = money.format(items.reduce((sum, i) => sum + i.price * i.quantity, 0))
 
   return [
-    `🛍️ ¡Hola ${siteName}! Quiero hacer este pedido:`,
+    `🛒 ¡Hola ${siteName}! Quiero hacer este pedido:`,
     '',
     lines,
     '',
