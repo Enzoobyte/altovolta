@@ -124,10 +124,16 @@ export default function ProductForm({
 
   function run(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    const form = e.currentTarget
+    const fd = new FormData(form)
+    fd.delete('images')
+    for (const file of previewFiles) fd.append('images', file)
     startTransition(async () => {
-      const result = await saveProduct(new FormData(e.currentTarget))
+      const result = await saveProduct(fd)
       if (result.error) {
         setError(result.error)
+        setPreviewFiles([])
+        setPreviewColors([])
       } else {
         router.push('/admin/productos')
         router.refresh()
@@ -156,9 +162,18 @@ export default function ProductForm({
   }
 
   function onPickFiles(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files ?? [])
-    setPreviewFiles(files)
-    setPreviewColors(files.map(() => uploadColor || null))
+    const picked = Array.from(e.target.files ?? [])
+    e.target.value = ''
+    if (picked.length === 0) return
+    const existing = new Set(previewFiles.map((f) => `${f.name}-${f.size}`))
+    const fresh = picked.filter((f) => !existing.has(`${f.name}-${f.size}`))
+    setPreviewFiles((prev) => [...prev, ...fresh])
+    setPreviewColors((prev) => [...prev, ...fresh.map(() => uploadColor || null)])
+  }
+
+  function removePreview(index: number) {
+    setPreviewFiles((prev) => prev.filter((_, i) => i !== index))
+    setPreviewColors((prev) => prev.filter((_, i) => i !== index))
   }
 
   return (
@@ -331,10 +346,43 @@ export default function ProductForm({
 
         <input type="hidden" name="image_colors" value={JSON.stringify(previewColors)} />
 
+        {previewFiles.length > 0 && (
+          <div>
+            <p className="mb-2 text-sm text-zinc-400">
+              {previewFiles.length} {previewFiles.length === 1 ? 'foto seleccionada' : 'fotos seleccionadas'}
+            </p>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {previewFiles.map((file, i) => (
+                <div key={`${file.name}-${file.size}`} className="group relative rounded-lg border border-zinc-800">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt=""
+                    className="aspect-square w-full rounded-t-lg object-cover"
+                  />
+                  <p className="truncate rounded-b-lg border-t border-zinc-800 bg-zinc-950 px-2 py-1.5 text-xs text-zinc-400">
+                    {previewColors[i] || 'Foto general'}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => removePreview(i)}
+                    className="absolute right-1 top-1 rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white opacity-0 transition group-hover:opacity-100"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-700 py-8 text-sm text-zinc-500 transition hover:border-red-600 hover:bg-zinc-950">
           <span className="text-2xl">＋</span>
-          <span className="mt-1 font-medium">Subir fotos desde este dispositivo</span>
-          <span className="text-xs text-zinc-600">JPG, PNG, WEBP · hasta 5 MB</span>
+          <span className="mt-1 font-medium">
+            {previewFiles.length > 0 ? 'Subir más fotos' : 'Subir fotos desde este dispositivo'}
+          </span>
+          <span className="text-xs text-zinc-600">
+            Podés elegir varias a la vez o una por una · JPG, PNG, WEBP · hasta 5 MB
+          </span>
           <input
             type="file"
             name="images"
@@ -344,23 +392,6 @@ export default function ProductForm({
             onChange={onPickFiles}
           />
         </label>
-
-        {previewFiles.length > 0 && (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {previewFiles.map((file, i) => (
-              <div key={i} className="rounded-lg border border-zinc-800">
-                <img
-                  src={URL.createObjectURL(file)}
-                  alt=""
-                  className="aspect-square w-full rounded-t-lg object-cover"
-                />
-                <p className="truncate rounded-b-lg border-t border-zinc-800 bg-zinc-950 px-2 py-1.5 text-xs text-zinc-400">
-                  {previewColors[i] || 'Foto general'}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
       </section>
 
       {/* Variantes: color × talle → stock */}

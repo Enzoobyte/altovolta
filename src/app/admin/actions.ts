@@ -91,23 +91,30 @@ function parseVariants(raw: string | null): ProductVariant[] {
 async function uploadImages(
   productId: string,
   files: FormDataEntryValue[]
-): Promise<string[]> {
+): Promise<{ urls: string[]; failed: number }> {
   const supabase = await createClient()
   const urls: string[] = []
+  let failed = 0
 
   for (const file of files) {
     if (!(file instanceof File) || file.size === 0) continue
+    if (file.size > 5 * 1024 * 1024) {
+      failed += 1
+      continue
+    }
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
     const path = `${productId}/${crypto.randomUUID()}.${ext}`
     const { error } = await supabase.storage
       .from('productos')
       .upload(path, file, { upsert: false })
-    if (!error) {
+    if (error) {
+      failed += 1
+    } else {
       const { data } = supabase.storage.from('productos').getPublicUrl(path)
       urls.push(data.publicUrl)
     }
   }
-  return urls
+  return { urls, failed }
 }
 
 export async function saveProduct(formData: FormData): Promise<ActionResult> {
@@ -170,7 +177,7 @@ export async function saveProduct(formData: FormData): Promise<ActionResult> {
     } catch {
       imageColors = []
     }
-    const urls = await uploadImages(productId, files)
+    const { urls, failed } = await uploadImages(productId, files)
     if (urls.length > 0) {
       const { error: e } = await supabase.from('product_images').insert(
         urls.map((url, i) => ({
@@ -181,6 +188,14 @@ export async function saveProduct(formData: FormData): Promise<ActionResult> {
         }))
       )
       if (e) return { error: e.message }
+    }
+    if (failed > 0) {
+      return {
+        error:
+          files.length - failed === 0
+            ? `No se pudo subir ninguna foto (${failed} archivo(s) con error; máximo 5 MB por archivo).`
+            : `Se subieron ${files.length - failed} de ${files.length} foto(s). ${failed} no entró(aron) (máximo 5 MB por archivo).`,
+      }
     }
   }
 
