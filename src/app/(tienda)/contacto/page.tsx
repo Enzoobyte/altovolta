@@ -1,0 +1,112 @@
+import type { Metadata } from 'next'
+import Image from 'next/image'
+import { getSiteSettings } from '@/lib/site'
+
+export const metadata: Metadata = { title: 'Contacto' }
+
+export default async function ContactPage() {
+  const settings = await getSiteSettings()
+
+  const socials = [
+    {
+      label: 'Instagram',
+      url: settings.instagram_url,
+      icon: '📷',
+    },
+    {
+      label: 'Facebook',
+      url: settings.facebook_url,
+      icon: '👥',
+    },
+    {
+      label: 'TikTok',
+      url: settings.tiktok_url,
+      icon: '🎵',
+    },
+  ].filter((s) => s.url)
+
+  const whatsappUrl =
+    settings.whatsapp_number &&
+    `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent('¡Hola Altovolta! 👋')}`
+
+  return (
+    <main className="mx-auto max-w-4xl px-4 py-14 lg:px-8">
+      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-400">Contacto</p>
+      <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+        Hablá con <span className="text-zinc-400">altovolta</span>
+      </h1>
+      <p className="mt-3 max-w-lg text-zinc-600">
+        Consultas, talles, stock y pedidos personalizados. Respondemos por los canales de abajo.
+      </p>
+
+      <div className="mt-10 grid gap-4 sm:grid-cols-2">
+        {whatsappUrl && (
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group rounded-2xl border border-zinc-200 bg-white p-6 transition hover:border-emerald-400 hover:shadow-lg"
+          >
+            <span className="text-2xl">💬</span>
+            <p className="mt-3 font-bold">WhatsApp</p>
+            <p className="mt-1 text-sm text-zinc-500">
+              {settings.whatsapp_number
+                ? `+${settings.whatsapp_number.replace(/(\d{2})(\d{3})(\d{3})(\d{4})/, '$1 $2 $3 $4')}`
+                : 'Chateá con el local'}
+            </p>
+            <p className="mt-2 text-sm font-medium text-emerald-600 group-hover:underline">
+              Escribinos →
+            </p>
+          </a>
+        )}
+
+        {settings.email && (
+          <a
+            href={`mailto:${settings.email}`}
+            className="group rounded-2xl border border-zinc-200 bg-white p-6 transition hover:border-zinc-950 hover:shadow-lg"
+          >
+            <span className="text-2xl">✉️</span>
+            <p className="mt-3 font-bold">Email</p>
+            <p className="mt-1 text-sm text-zinc-500">{settings.email}</p>
+            <p className="mt-2 text-sm font-medium group-hover:underline">Enviar mail →</p>
+          </a>
+        )}
+
+        {settings.address && (
+          <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+            <span className="text-2xl">📍</span>
+            <p className="mt-3 font-bold">El local</p>
+            <p className="mt-1 text-sm text-zinc-500">{settings.address}</p>
+          </div>
+        )}
+
+        {socials.map((s) => (
+          <a
+            key={s.label}
+            href={s.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group rounded-2xl border border-zinc-200 bg-white p-6 transition hover:border-zinc-950 hover:shadow-lg"
+          >
+            <span className="text-2xl">{s.icon}</span>
+            <p className="mt-3 font-bold">{s.label}</p>
+            <p className="mt-1 break-all text-sm text-zinc-500">{s.url.replace(/^https?:\/\//, '')}</p>
+            <p className="mt-2 text-sm font-medium group-hover:underline">Seguir →</p>
+          </a>
+        ))}
+      </div>
+
+      {settings.banner_url && (
+        <div className="mt-12 overflow-hidden rounded-2xl">
+          <Image
+            src={settings.banner_url}
+            alt=""
+            width={896}
+            height={300}
+            className="h-40 w-full object-cover"
+          />
+        </div>
+      )}
+    </main>
+  )
+}
