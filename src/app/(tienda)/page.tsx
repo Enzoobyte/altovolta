@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getCategories, getSiteSettings } from '@/lib/site'
 import { ProductCard } from '@/components/store/product-card'
 import { InstagramIcon, WhatsAppIcon } from '@/components/store/icons'
+import { Reveal } from '@/components/store/reveal'
 import { buildWhatsAppUrl } from '@/lib/whatsapp'
 import { cn } from '@/lib/utils'
 
@@ -56,43 +57,61 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
         ) : null}
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 h-[480px] w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-600/20 blur-[140px]"
+          className="animate-pulse-glow pointer-events-none absolute left-1/2 top-1/2 h-[480px] w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-600/20 blur-[140px]"
+        />
+        <div
+          aria-hidden
+          className="animate-float-blob pointer-events-none absolute -left-24 top-16 h-64 w-64 rounded-full bg-red-600/10 blur-[100px]"
+        />
+        <div
+          aria-hidden
+          className="animate-float-blob pointer-events-none absolute -right-24 bottom-10 h-72 w-72 rounded-full bg-zinc-500/10 blur-[110px]"
+          style={{ animationDelay: '-7s' }}
         />
         <div className="relative mx-auto flex max-w-6xl flex-col items-center px-4 py-28 text-center lg:px-8">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-red-500">
-            Nueva temporada
-          </p>
-          <h1 className="max-w-2xl text-4xl font-extrabold uppercase tracking-tight text-white sm:text-6xl">
-            alt0<span className="text-red-600">volta</span>
-          </h1>
-          <p className="mt-4 max-w-xl text-zinc-300">
-            {settings.about_text || 'Ropa con actitud. Elegí tus prendas y pedí directo por WhatsApp.'}
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <a
-              href="#tienda"
-              className="rounded-full bg-red-600 px-8 py-3 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
-            >
-              Ver catálogo
-            </a>
-            {whatsappUrl && (
+          <Reveal>
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-red-500">
+              Nueva temporada
+            </p>
+          </Reveal>
+          <Reveal delay={120}>
+            <h1 className="max-w-2xl text-4xl font-extrabold uppercase tracking-tight text-white sm:text-6xl">
+              alt0<span className="text-red-600 drop-shadow-[0_0_24px_rgba(220,38,38,0.45)]">volta</span>
+            </h1>
+          </Reveal>
+          <Reveal delay={240}>
+            <p className="mt-4 max-w-xl text-zinc-300">
+              {settings.about_text || 'Ropa con actitud. Elegí tus prendas y pedí directo por WhatsApp.'}
+            </p>
+          </Reveal>
+          <Reveal delay={360}>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-full border border-[#25D366]/50 px-6 py-3 text-sm font-bold uppercase tracking-wide text-[#25D366] transition hover:bg-[#25D366] hover:text-black"
+                href="#tienda"
+                className="rounded-full bg-red-600 px-8 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-lg shadow-red-950/50 transition hover:scale-[1.03] hover:bg-red-500 active:scale-95"
               >
-                <WhatsAppIcon className="h-4 w-4" />
-                WhatsApp
+                Ver catálogo
               </a>
-            )}
-          </div>
+              {whatsappUrl && (
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-full border border-[#25D366]/50 px-6 py-3 text-sm font-bold uppercase tracking-wide text-[#25D366] transition hover:scale-[1.03] hover:bg-[#25D366] hover:text-black active:scale-95"
+                >
+                  <WhatsAppIcon className="h-4 w-4" />
+                  WhatsApp
+                </a>
+              )}
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* FILTRO POR CATEGORÍA + GRID */}
       <section id="tienda" className="mx-auto max-w-6xl px-4 py-12 lg:px-8">
-        <div className="flex flex-wrap items-center gap-2">
+        <Reveal>
+          <div className="flex flex-wrap items-center gap-2">
           <Link
             href="/"
             className={cn(
@@ -119,6 +138,7 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
             </Link>
           ))}
         </div>
+        </Reveal>
 
         {!products || products.length === 0 ? (
           <div className="py-24 text-center">
@@ -133,20 +153,21 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
               {count} {count === 1 ? 'prenda' : 'prendas'}
             </p>
             <div className="mt-4 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
-              {products.map((p) => (
-                <ProductCard
-                  key={p.id}
-                  product={{
-                    slug: p.slug,
-                    name: p.name,
-                    price: Number(p.price),
-                    image: p.images?.[0]?.url ?? null,
-                    oldPrice: p.old_price != null ? Number(p.old_price) : null,
-                    featured: p.featured,
-                    isNew: new Date(p.created_at).getTime() >= NEW_BEFORE_TS,
-                    totalStock: (p.variants ?? []).reduce((acc, v) => acc + v.stock, 0),
-                  }}
-                />
+              {products.map((p, i) => (
+                <Reveal key={p.id} delay={(i % 4) * 70}>
+                  <ProductCard
+                    product={{
+                      slug: p.slug,
+                      name: p.name,
+                      price: Number(p.price),
+                      image: p.images?.[0]?.url ?? null,
+                      oldPrice: p.old_price != null ? Number(p.old_price) : null,
+                      featured: p.featured,
+                      isNew: new Date(p.created_at).getTime() >= NEW_BEFORE_TS,
+                      totalStock: (p.variants ?? []).reduce((acc, v) => acc + v.stock, 0),
+                    }}
+                  />
+                </Reveal>
               ))}
             </div>
           </>
@@ -157,7 +178,8 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
       {settings.instagram_url && (
         <section className="border-t border-zinc-800 py-12">
           <div className="mx-auto max-w-6xl px-4 lg:px-8">
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            <Reveal>
+              <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-2xl font-bold tracking-tight text-white">Instagram</h2>
               <a
                 href={settings.instagram_url}
@@ -169,16 +191,19 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
                 Seguinos
               </a>
             </div>
-            <div className="mt-6 overflow-hidden rounded-2xl border border-zinc-800 bg-black">
-              <iframe
-                src={`https://www.instagram.com/${settings.instagram_url
-                  .replace(/^https?:\/\/(www\.)?instagram\.com\//, '')
-                  .split(/[/?#]/)[0]}/embed`}
-                className="h-[480px] w-full"
-                loading="lazy"
-                title="Feed de Instagram"
-              />
-            </div>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="mt-6 overflow-hidden rounded-2xl border border-zinc-800 bg-black">
+                <iframe
+                  src={`https://www.instagram.com/${settings.instagram_url
+                    .replace(/^https?:\/\/(www\.)?instagram\.com\//, '')
+                    .split(/[/?#]/)[0]}/embed`}
+                  className="h-[480px] w-full"
+                  loading="lazy"
+                  title="Feed de Instagram"
+                />
+              </div>
+            </Reveal>
           </div>
         </section>
       )}

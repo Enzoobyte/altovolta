@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getSiteSettings } from '@/lib/site'
 import { buildWhatsAppUrl } from '@/lib/whatsapp'
 import { WhatsAppIcon } from '@/components/store/icons'
+import { PaymentMethods, ShippingMethods } from '@/components/store/payment-icons'
 
 export const metadata: Metadata = {
   title: 'Cómo comprar',
@@ -89,6 +90,22 @@ export default async function ComoComprarPage() {
             Consultar por WhatsApp
           </a>
         )}
+      </div>
+
+      <div className="mt-12 grid gap-6 sm:grid-cols-2">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+          <PaymentMethods />
+          <p className="mt-4 text-sm leading-relaxed text-zinc-400">
+            Coordinamos el pago por WhatsApp: Mercado Pago, transferencia o efectivo al retirar.
+          </p>
+        </div>
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+          <ShippingMethods />
+          <p className="mt-4 text-sm leading-relaxed text-zinc-400">
+            Una vez confirmado el pedido, coordinamos el envío (a todo el país) o el retiro por el
+            local.
+          </p>
+        </div>
       </div>
 
       <div className="mt-12 rounded-2xl border border-zinc-800 bg-zinc-900 p-6">

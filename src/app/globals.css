@@ -34,3 +34,91 @@ body {
   animation-iteration-count: infinite;
   animation-duration: 15s;
 }
+
+/* ------- Efectos visuales ------- */
+
+/* Glow pulsante (hero) */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.18);
+  }
+}
+
+/* Blobs flotando */
+@keyframes float-blob {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(22px, -26px) rotate(5deg);
+  }
+  66% {
+    transform: translate(-18px, 14px) rotate(-4deg);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 6s ease-in-out infinite;
+}
+.animate-float-blob {
+  animation: float-blob 14s ease-in-out infinite;
+}
+
+/* Shine sweep en cards (al pasar el mouse) */
+.shine-sweep {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.shine-sweep::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+  transform: translateX(-160%) skewX(-18deg);
+}
+.group:hover .shine-sweep::after {
+  animation: shine-sweep 0.9s ease forwards;
+}
+@keyframes shine-sweep {
+  to {
+    transform: translateX(320%) skewX(-18deg);
+  }
+}
+
+/* Reveal al hacer scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-ltr,
+  .animate-pulse-glow,
+  .animate-float-blob,
+  .shine-sweep::after {
+    animation: none !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

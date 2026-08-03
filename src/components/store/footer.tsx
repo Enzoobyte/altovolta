@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getSiteSettings } from '@/lib/site'
 import { WhatsAppIcon, InstagramIcon, FacebookIcon, TikTokIcon } from './icons'
+import { PaymentMethods, ShippingMethods } from './payment-icons'
 import { buildWhatsAppUrl } from '@/lib/whatsapp'
 
 export async function StoreFooter() {
@@ -98,6 +99,11 @@ export async function StoreFooter() {
             )}
           </ul>
         </div>
+      </div>
+
+      <div className="mx-auto grid max-w-6xl gap-8 border-t border-zinc-800 px-4 py-8 sm:grid-cols-2 lg:px-8">
+        <PaymentMethods />
+        <ShippingMethods />
       </div>
 
       <div className="flex items-center justify-center gap-2 border-t border-zinc-800 py-4 text-center text-xs text-zinc-600">

@@ -40,6 +40,7 @@ export function ProductCard({ product }: { product: CardProduct }) {
         ) : (
           <div className="flex h-full items-center justify-center text-3xl text-zinc-700">◇</div>
         )}
+        <span className="shine-sweep" />
 
         <div className="absolute left-2 top-2 flex flex-col items-start gap-1.5">
           {discount > 0 && (
