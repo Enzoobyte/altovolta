@@ -3,18 +3,20 @@
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import { ProductBuyer } from './product-buyer'
-import { cn } from '@/lib/utils'
+import { formatPrice, cn } from '@/lib/utils'
 import type { ProductVariant, ProductImage } from '@/lib/types'
 
 export function ProductViewer({
   product,
   variants,
   images,
+  oldPrice,
   children,
 }: {
   product: { id: string; slug: string; name: string; price: number }
   variants: ProductVariant[]
   images: ProductImage[]
+  oldPrice?: number | null
   children?: React.ReactNode
 }) {
   const colors = useMemo(() => [...new Set(variants.map((v) => v.color))], [variants])
@@ -102,7 +104,7 @@ export function ProductViewer({
       </div>
 
       {/* INFO + COMPRA */}
-      <div>
+      <div id="comprar" className="scroll-mt-24 pb-24 lg:pb-0">
         {children}
 
         <ProductBuyer
@@ -112,6 +114,27 @@ export function ProductViewer({
           onSelectColor={setSelectedColor}
           imageForColor={imageForColor}
         />
+      </div>
+
+      {/* STICKY MÓVIL: precio + comprar */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-800 bg-black/95 px-4 py-3 backdrop-blur lg:hidden">
+        <div className="mx-auto flex max-w-lg items-center justify-between gap-3">
+          <div>
+            <p className="text-lg font-bold text-white">{formatPrice(product.price)}</p>
+            {oldPrice && oldPrice > product.price && (
+              <p className="text-xs text-zinc-500 line-through">{formatPrice(oldPrice)}</p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() =>
+              document.getElementById('comprar')?.scrollIntoView({ behavior: 'smooth' })
+            }
+            className="rounded-full bg-red-600 px-6 py-2.5 text-xs font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
+          >
+            Elegir color y talle
+          </button>
+        </div>
       </div>
     </div>
   )

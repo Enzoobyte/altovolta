@@ -12,6 +12,8 @@ export type Product = {
   slug: string
   description: string
   price: number
+  old_price: number | null
+  featured: boolean
   category_id: string | null
   active: boolean
   created_at: string
@@ -51,6 +53,7 @@ export type SiteSettings = {
   email: string
   address: string
   about_text: string
+  announcement_text: string
   logo_url: string
   banner_url: string
 }
@@ -64,6 +67,7 @@ export const SITE_SETTINGS_KEYS = [
   'email',
   'address',
   'about_text',
+  'announcement_text',
   'logo_url',
   'banner_url',
 ] as const

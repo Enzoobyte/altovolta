@@ -129,6 +129,8 @@ export async function saveProduct(formData: FormData): Promise<ActionResult> {
     slug: String(formData.get('slug') ?? '').trim() || slugify(name),
     description: String(formData.get('description') ?? ''),
     price: Number(formData.get('price')) || 0,
+    old_price: Number(formData.get('old_price')) || null,
+    featured: formData.get('featured') === 'on',
     category_id: String(formData.get('category_id') ?? '') || null,
     active: formData.get('active') === 'on',
   }
@@ -212,6 +214,126 @@ export async function updateImageColor(formData: FormData): Promise<ActionResult
   if (error) return { error: error.message }
 
   revalidatePath('/', 'layout')
+  return { ok: true }
+}
+
+export async function moveImage(formData: FormData): Promise<ActionResult> {
+  const { supabase } = await requireAdmin()
+  const id = String(formData.get('id'))
+  const direction = String(formData.get('direction')) as 'up' | 'down'
+
+  const { data: img } = await supabase
+    .from('product_images')
+    .select('product_id, sort_order')
+    .eq('id', id)
+    .maybeSingle()
+  if (!img) return { error: 'Imagen no encontrada' }
+
+  const { data: all } = await supabase
+    .from('product_images')
+    .select('id, sort_order')
+    .eq('product_id', img.product_id)
+    .order('sort_order', { ascending: true })
+
+  const others = (all ?? []).filter((i) => i.id !== id)
+  const neighbor =
+    direction === 'up'
+      ? [...others].reverse().find((i) => i.sort_order < img.sort_order)
+      : others.find((i) => i.sort_order > img.sort_order)
+  if (!neighbor) return { ok: true }
+
+  const { error } = await supabase
+    .from('product_images')
+    .update({ sort_order: neighbor.sort_order })
+    .eq('id', id)
+  if (error) return { error: error.message }
+
+  const { error: e2 } = await supabase
+    .from('product_images')
+    .update({ sort_order: img.sort_order })
+    .eq('id', neighbor.id)
+  if (e2) return { error: e2.message }
+
+  revalidatePath('/admin', 'layout')
+  return { ok: true }
+}
+
+export async function toggleFeatured(formData: FormData): Promise<ActionResult> {
+  const { supabase } = await requireAdmin()
+  const id = String(formData.get('id'))
+
+  const { data: product } = await supabase
+    .from('products')
+    .select('featured')
+    .eq('id', id)
+    .maybeSingle()
+  if (!product) return { error: 'Producto no encontrado' }
+
+  const { error } = await supabase
+    .from('products')
+    .update({ featured: !product.featured })
+    .eq('id', id)
+  if (error) return { error: error.message }
+
+  revalidatePath('/', 'layout')
+  return { ok: true }
+}
+
+export async function duplicateProduct(formData: FormData): Promise<ActionResult> {
+  const { supabase } = await requireAdmin()
+  const id = String(formData.get('id'))
+
+  const { data: product } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle()
+  if (!product) return { error: 'Producto no encontrado' }
+
+  const { data: variants } = await supabase
+    .from('product_variants')
+    .select('color, color_hex, size, stock')
+    .eq('product_id', id)
+  const { data: images } = await supabase
+    .from('product_images')
+    .select('url, color, sort_order')
+    .eq('product_id', id)
+    .order('sort_order', { ascending: true })
+
+  const { data: existing } = await supabase
+    .from('products')
+    .select('id')
+    .eq('slug', `${product.slug}-copia`)
+    .maybeSingle()
+
+  const { data: inserted, error } = await supabase
+    .from('products')
+    .insert({
+      name: `${product.name} (copia)`,
+      slug: existing ? `${product.slug}-copia-${Date.now().toString().slice(-4)}` : `${product.slug}-copia`,
+      description: product.description,
+      price: product.price,
+      old_price: product.old_price,
+      featured: false,
+      category_id: product.category_id,
+      active: false,
+    })
+    .select('id')
+    .single()
+  if (error) return { error: error.message }
+
+  if (variants && variants.length > 0) {
+    await supabase.from('product_variants').insert(
+      variants.map((v) => ({ ...v, product_id: inserted.id }))
+    )
+  }
+  if (images && images.length > 0) {
+    await supabase.from('product_images').insert(
+      images.map((i) => ({ ...i, product_id: inserted.id }))
+    )
+  }
+
+  revalidatePath('/admin', 'layout')
   return { ok: true }
 }
 

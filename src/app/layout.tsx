@@ -13,11 +13,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://altovolta.vercel.app'),
   title: {
-    default: "Altovolta | Ropa",
+    default: "Altovolta | Tienda",
     template: "%s | Altovolta",
   },
   description: "Tienda de ropa Altovolta. Catálogo online, pedidos por WhatsApp.",
+  openGraph: {
+    title: "Altovolta",
+    description: "Ropa con actitud. Catálogo online, pedidos por WhatsApp.",
+    siteName: "Altovolta",
+    locale: "es_AR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

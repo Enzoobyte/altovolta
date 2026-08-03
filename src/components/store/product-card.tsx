@@ -1,36 +1,79 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { formatPrice } from '@/lib/utils'
+import { formatPrice, cn } from '@/lib/utils'
 
 type CardProduct = {
   slug: string
   name: string
   price: number
   image: string | null
+  oldPrice: number | null
+  featured: boolean
+  isNew: boolean
+  totalStock: number
 }
 
 export function ProductCard({ product }: { product: CardProduct }) {
+  const discount =
+    product.oldPrice && product.oldPrice > product.price
+      ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
+      : 0
+  const out = product.totalStock === 0
+
   return (
     <Link
       href={`/producto/${product.slug}`}
-      className="group block overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 transition hover:border-red-600/60 hover:shadow-lg hover:shadow-red-950/40"
+      className="group relative block overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 transition hover:border-red-600/60 hover:shadow-lg hover:shadow-red-950/40"
     >
-      <div className="aspect-[4/5] overflow-hidden bg-zinc-950">
+      <div className="relative aspect-[4/5] overflow-hidden bg-zinc-950">
         {product.image ? (
           <Image
             src={product.image}
             alt={product.name}
             width={600}
             height={750}
-            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+            className={cn(
+              'h-full w-full object-cover transition duration-300 group-hover:scale-105',
+              out && 'opacity-50 saturate-0'
+            )}
           />
         ) : (
           <div className="flex h-full items-center justify-center text-3xl text-zinc-700">◇</div>
         )}
+
+        <div className="absolute left-2 top-2 flex flex-col items-start gap-1.5">
+          {discount > 0 && (
+            <span className="rounded-full bg-red-600 px-2.5 py-0.5 text-[11px] font-bold text-white">
+              OFERTA -{discount}%
+            </span>
+          )}
+          {product.isNew && (
+            <span className="rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-bold text-black">
+              NUEVO
+            </span>
+          )}
+        </div>
+
+        {product.featured && (
+          <span className="absolute right-2 top-2 text-sm text-amber-400 drop-shadow">★</span>
+        )}
+
+        {out && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="rounded-full bg-black/80 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white">
+              Sin stock
+            </span>
+          </div>
+        )}
       </div>
       <div className="p-4">
         <p className="line-clamp-1 font-medium text-white">{product.name}</p>
-        <p className="mt-1 text-sm font-semibold text-red-500">{formatPrice(product.price)}</p>
+        <div className="mt-1 flex flex-wrap items-baseline gap-2">
+          <p className="text-sm font-semibold text-red-500">{formatPrice(product.price)}</p>
+          {discount > 0 && (
+            <p className="text-xs text-zinc-500 line-through">{formatPrice(product.oldPrice!)}</p>
+          )}
+        </div>
       </div>
     </Link>
   )

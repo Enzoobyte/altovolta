@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { formatPrice, firstOrNull } from '@/lib/utils'
 import { DeleteProductButton } from '@/components/admin/delete-product-button'
+import { ProductActions } from '@/components/admin/product-actions'
 
 export const metadata: Metadata = { title: 'Productos | Altovolta Admin' }
 
@@ -13,7 +14,7 @@ export default async function ProductsPage() {
   const { data: products } = await supabase
     .from('products')
     .select(
-      'id, name, slug, price, active, category:categories(name), images:product_images(url)'
+      'id, name, slug, price, old_price, featured, active, category:categories(name), images:product_images(url)'
     )
     .order('created_at', { ascending: false })
 
@@ -71,9 +72,15 @@ export default async function ProductsPage() {
                   <p className="truncate text-sm text-zinc-400">
                     {firstOrNull(p.category)?.name ?? 'Sin categoría'} ·{' '}
                     <span className="text-red-500">{formatPrice(Number(p.price))}</span>
+                    {p.old_price != null && Number(p.old_price) > Number(p.price) && (
+                      <span className="ml-1 text-xs text-zinc-600 line-through">
+                        {formatPrice(Number(p.old_price))}
+                      </span>
+                    )}
                   </p>
                 </div>
                 <div className="flex shrink-0 gap-2">
+                  <ProductActions productId={p.id} featured={p.featured} />
                   <Link
                     href={`/admin/productos/${p.id}/editar`}
                     className="rounded-lg border border-zinc-700 px-3 py-1.5 text-sm font-medium text-zinc-300 transition hover:border-zinc-500 hover:bg-zinc-800"

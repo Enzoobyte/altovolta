@@ -68,6 +68,21 @@ export default function SettingsForm({ settings }: { settings: SiteSettings }) {
             <input id="address" name="address" defaultValue={settings.address} className={inputCls} />
           </div>
           <div className="sm:col-span-2">
+            <label htmlFor="announcement_text" className="mb-1 block text-sm font-medium text-zinc-400">
+              Barra de anuncios (arriba de todo, opcional)
+            </label>
+            <input
+              id="announcement_text"
+              name="announcement_text"
+              defaultValue={settings.announcement_text}
+              placeholder="Ej: ENVÍO GRATIS EN COMPRAS MAYORES A $50.000 🚚"
+              className={inputCls}
+            />
+            <p className="mt-1 text-xs text-zinc-600">
+              Si queda vacía, la barra no se muestra. Ofertas, envíos, nuevas colecciones…
+            </p>
+          </div>
+          <div className="sm:col-span-2">
             <label htmlFor="about_text" className="mb-1 block text-sm font-medium text-zinc-400">
               Texto de presentación (sobre el local)
             </label>

@@ -4,14 +4,16 @@ import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { getCategories, getSiteSettings } from '@/lib/site'
 import { ProductCard } from '@/components/store/product-card'
-import { WhatsAppIcon } from '@/components/store/icons'
+import { InstagramIcon, WhatsAppIcon } from '@/components/store/icons'
 import { buildWhatsAppUrl } from '@/lib/whatsapp'
 import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
-  title: 'Catálogo',
+  title: { absolute: 'Altovolta | Tienda' },
   description: 'Explorá el catálogo de Altovolta y pedí por WhatsApp.',
 }
+
+const NEW_BEFORE_TS = Date.now() - 14 * 24 * 60 * 60 * 1000
 
 export default async function HomePage(props: { searchParams: Promise<{ cat?: string }> }) {
   const { cat } = await props.searchParams
@@ -25,10 +27,11 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
   let query = supabase
     .from('products')
     .select(
-      'id, slug, name, price, category_id, category:categories(slug), images:product_images(url)',
+      'id, slug, name, price, old_price, featured, created_at, category_id, category:categories(slug), images:product_images(url), variants:product_variants(stock)',
       { count: 'exact' }
     )
     .eq('active', true)
+    .order('featured', { ascending: false })
     .order('created_at', { ascending: false })
 
   if (cat) {
@@ -138,6 +141,10 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
                     name: p.name,
                     price: Number(p.price),
                     image: p.images?.[0]?.url ?? null,
+                    oldPrice: p.old_price != null ? Number(p.old_price) : null,
+                    featured: p.featured,
+                    isNew: new Date(p.created_at).getTime() >= NEW_BEFORE_TS,
+                    totalStock: (p.variants ?? []).reduce((acc, v) => acc + v.stock, 0),
                   }}
                 />
               ))}
@@ -145,6 +152,36 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
           </>
         )}
       </section>
+
+      {/* INSTAGRAM */}
+      {settings.instagram_url && (
+        <section className="border-t border-zinc-800 py-12">
+          <div className="mx-auto max-w-6xl px-4 lg:px-8">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-2xl font-bold tracking-tight text-white">Instagram</h2>
+              <a
+                href={settings.instagram_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-full border border-[#E4405F]/50 px-4 py-2 text-sm font-semibold text-[#E4405F] transition hover:bg-[#E4405F] hover:text-white"
+              >
+                <InstagramIcon className="h-4 w-4" />
+                Seguinos
+              </a>
+            </div>
+            <div className="mt-6 overflow-hidden rounded-2xl border border-zinc-800 bg-black">
+              <iframe
+                src={`https://www.instagram.com/${settings.instagram_url
+                  .replace(/^https?:\/\/(www\.)?instagram\.com\//, '')
+                  .split(/[/?#]/)[0]}/embed`}
+                className="h-[480px] w-full"
+                loading="lazy"
+                title="Feed de Instagram"
+              />
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   )
 }

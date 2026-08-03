@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useCart } from '@/stores/cart'
 import { formatPrice, cn } from '@/lib/utils'
+import { SizeGuide } from './size-guide'
 import type { ProductVariant } from '@/lib/types'
 
 export function ProductBuyer({
@@ -36,6 +37,7 @@ export function ProductBuyer({
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const [quantity, setQuantity] = useState(1)
   const [added, setAdded] = useState(false)
+  const [guideOpen, setGuideOpen] = useState(false)
 
   // Si cambia el color, se reinicia talle/cantidad (patrón "adjust state during render")
   const [prevColor, setPrevColor] = useState(selectedColor)
@@ -119,9 +121,18 @@ export function ProductBuyer({
 
       {/* TALLE — según el color elegido */}
       <div>
-        <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-zinc-300">
-          Talle{selectedSize ? `: ${selectedSize}` : ' *'}
-        </p>
+        <div className="mb-2 flex items-center justify-between">
+          <p className="text-sm font-semibold uppercase tracking-wide text-zinc-300">
+            Talle{selectedSize ? `: ${selectedSize}` : ' *'}
+          </p>
+          <button
+            type="button"
+            onClick={() => setGuideOpen(true)}
+            className="text-xs font-medium text-zinc-400 underline decoration-dotted underline-offset-4 transition hover:text-red-500"
+          >
+            Ver guía de talles
+          </button>
+        </div>
         <div className="flex flex-wrap gap-2">
           {sizesForColor.map((v) => (
             <button
@@ -198,6 +209,8 @@ export function ProductBuyer({
           <span className="font-semibold text-red-500">{formatPrice(product.price * quantity)}</span>
         </p>
       )}
+
+      <SizeGuide open={guideOpen} onClose={() => setGuideOpen(false)} />
     </div>
   )
 }

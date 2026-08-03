@@ -50,6 +50,11 @@ export async function StoreFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/como-comprar" className="transition hover:text-red-500">
+                Cómo comprar
+              </Link>
+            </li>
+            <li>
               <Link href="/contacto" className="transition hover:text-red-500">
                 Contacto
               </Link>

@@ -7,7 +7,13 @@ export async function StoreHeader() {
   const settings = await getSiteSettings()
 
   return (
-    <header className="sticky top-0 z-30 border-b border-zinc-800 bg-black/90 backdrop-blur">
+    <>
+      {settings.announcement_text && (
+        <div className="bg-red-600 py-1.5 text-center text-xs font-semibold uppercase tracking-wider text-white">
+          {settings.announcement_text}
+        </div>
+      )}
+      <header className="sticky top-0 z-30 border-b border-zinc-800 bg-black/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
           {settings.logo_url ? (
@@ -39,6 +45,7 @@ export async function StoreHeader() {
 
         <CartLink />
       </div>
-    </header>
+      </header>
+    </>
   )
 }

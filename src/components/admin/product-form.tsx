@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { saveProduct, deleteProductImage, updateImageColor } from '@/app/admin/actions'
+import { saveProduct, deleteProductImage, updateImageColor, moveImage } from '@/app/admin/actions'
 import type { Category, ProductVariant, ProductImage } from '@/lib/types'
 import { slugify } from '@/lib/utils'
 
@@ -24,6 +24,8 @@ export default function ProductForm({
     slug: string
     description: string
     price: number
+    old_price: number | null
+    featured: boolean
     category_id: string | null
     active: boolean
     variants: ProductVariant[]
@@ -171,6 +173,17 @@ export default function ProductForm({
     setPreviewColors((prev) => [...prev, ...fresh.map(() => uploadColor || null)])
   }
 
+  function moveImg(img: ProductImage, direction: 'up' | 'down') {
+    startTransition(async () => {
+      const fd = new FormData()
+      fd.set('id', img.id)
+      fd.set('direction', direction)
+      const result = await moveImage(fd)
+      if (result.error) setError(result.error)
+      else router.refresh()
+    })
+  }
+
   function removePreview(index: number) {
     setPreviewFiles((prev) => prev.filter((_, i) => i !== index))
     setPreviewColors((prev) => prev.filter((_, i) => i !== index))
@@ -240,6 +253,25 @@ export default function ProductForm({
             />
           </div>
           <div>
+            <label htmlFor="old_price" className={labelCls}>
+              Precio antes (tachado, opcional)
+            </label>
+            <input
+              id="old_price"
+              name="old_price"
+              type="number"
+              min="0"
+              step="0.01"
+              defaultValue={product?.old_price ?? ''}
+              className={inputCls}
+              placeholder="50000"
+            />
+            <p className="mt-1 text-xs text-zinc-600">
+              Si es mayor al precio actual, la tienda muestra el descuento y el badge{' '}
+              {"'OFERTA'"}.
+            </p>
+          </div>
+          <div>
             <label htmlFor="category_id" className={labelCls}>
               Categoría
             </label>
@@ -271,15 +303,26 @@ export default function ProductForm({
             />
           </div>
         </div>
-        <label className="flex items-center gap-2 text-sm font-medium text-zinc-300">
-          <input
-            type="checkbox"
-            name="active"
-            defaultChecked={product?.active ?? true}
-            className="h-4 w-4 accent-red-600"
-          />
-          Visible en la tienda
-        </label>
+        <div className="flex flex-wrap gap-5">
+          <label className="flex items-center gap-2 text-sm font-medium text-zinc-300">
+            <input
+              type="checkbox"
+              name="active"
+              defaultChecked={product?.active ?? true}
+              className="h-4 w-4 accent-red-600"
+            />
+            Visible en la tienda
+          </label>
+          <label className="flex items-center gap-2 text-sm font-medium text-zinc-300">
+            <input
+              type="checkbox"
+              name="featured"
+              defaultChecked={product?.featured ?? false}
+              className="h-4 w-4 accent-red-600"
+            />
+            Destacado (aparece primero, con ★)
+          </label>
+        </div>
       </section>
 
       {/* Fotos */}
@@ -317,6 +360,33 @@ export default function ProductForm({
                 >
                   ✕
                 </button>
+                <div className="absolute bottom-1 left-1 flex gap-1">
+                  {img.sort_order !== 0 && (
+                    <button
+                      type="button"
+                      title="Mover a la izquierda"
+                      disabled={isPending}
+                      onClick={() => moveImg(img, 'up')}
+                      className="rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white transition hover:bg-black disabled:opacity-40"
+                    >
+                      ←
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    title="Mover a la derecha"
+                    disabled={isPending}
+                    onClick={() => moveImg(img, 'down')}
+                    className="rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white transition hover:bg-black disabled:opacity-40"
+                  >
+                    →
+                  </button>
+                </div>
+                {img.sort_order === 0 && (
+                  <span className="absolute left-1 top-1 rounded bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                    PORTADA
+                  </span>
+                )}
               </div>
             ))}
           </div>
