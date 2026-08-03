@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { formatPrice, firstOrNull } from '@/lib/utils'
-import { deleteProduct } from '../actions'
+import { DeleteProductButton } from '@/components/admin/delete-product-button'
 
 export const metadata: Metadata = { title: 'Productos | Altovolta Admin' }
 
@@ -80,22 +80,7 @@ export default async function ProductsPage() {
                   >
                     Editar
                   </Link>
-                  <form
-                    action={async (fd) => {
-                      await deleteProduct(fd)
-                    }}
-                    onSubmit={(e) => {
-                      if (!confirm('¿Eliminar este producto y sus fotos?')) e.preventDefault()
-                    }}
-                  >
-                    <input type="hidden" name="id" value={p.id} />
-                    <button
-                      type="submit"
-                      className="rounded-lg border border-red-900 px-3 py-1.5 text-sm font-medium text-red-500 transition hover:bg-red-950"
-                    >
-                      Eliminar
-                    </button>
-                  </form>
+                  <DeleteProductButton productId={p.id} />
                 </div>
               </li>
             ))}

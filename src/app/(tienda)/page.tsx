@@ -19,7 +19,7 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
   let query = supabase
     .from('products')
     .select(
-      'id, slug, name, price, category_id, category!inner(slug), images:product_images(url)',
+      'id, slug, name, price, category_id, category:categories(slug), images:product_images(url)',
       { count: 'exact' }
     )
     .eq('active', true)
