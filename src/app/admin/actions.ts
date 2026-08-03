@@ -393,6 +393,7 @@ export async function saveSettings(formData: FormData): Promise<ActionResult> {
     email: String(formData.get('email') ?? ''),
     address: String(formData.get('address') ?? ''),
     about_text: String(formData.get('about_text') ?? ''),
+    announcement_text: String(formData.get('announcement_text') ?? ''),
   }
 
   const logoFile = formData.get('logo')
