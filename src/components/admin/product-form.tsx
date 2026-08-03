@@ -65,6 +65,11 @@ export default function ProductForm({
   const [uploadColor, setUploadColor] = useState('')
   const [previewFiles, setPreviewFiles] = useState<File[]>([])
   const [previewColors, setPreviewColors] = useState<(string | null)[]>([])
+  const [imgColors, setImgColors] = useState<Record<string, string | null>>(() => {
+    const map: Record<string, string | null> = {}
+    for (const img of product?.images ?? []) map[img.id] = img.color ?? null
+    return map
+  })
 
   const variantsJson = useMemo(() => {
     const list: { color: string; color_hex: string; size: string; stock: number }[] = []
@@ -153,13 +158,18 @@ export default function ProductForm({
   }
 
   function changeImageColor(img: ProductImage, color: string) {
-    startTransition(async () => {
-      const fd = new FormData()
-      fd.set('id', img.id)
-      fd.set('color', color)
-      const result = await updateImageColor(fd)
-      if (result.error) setError(result.error)
-      else router.refresh()
+    // Optimista: el selector cambia al instante y el guardado va en segundo plano
+    const prev = imgColors[img.id] ?? img.color ?? null
+    setImgColors((m) => ({ ...m, [img.id]: color || null }))
+    setError(null)
+    const fd = new FormData()
+    fd.set('id', img.id)
+    fd.set('color', color)
+    void updateImageColor(fd).then((result) => {
+      if (result.error) {
+        setImgColors((m) => ({ ...m, [img.id]: prev }))
+        setError(result.error)
+      }
     })
   }
 
@@ -341,8 +351,7 @@ export default function ProductForm({
                   className="aspect-square w-full rounded-t-lg object-cover"
                 />
                 <select
-                  value={img.color ?? ''}
-                  disabled={isPending}
+                  value={imgColors[img.id] ?? ''}
                   onChange={(e) => changeImageColor(img, e.target.value)}
                   className="w-full rounded-b-lg border-0 border-t border-zinc-800 bg-zinc-950 px-2 py-1.5 text-xs text-zinc-300 outline-none focus:bg-zinc-900"
                 >
@@ -356,7 +365,8 @@ export default function ProductForm({
                 <button
                   type="button"
                   onClick={() => removeImage(img)}
-                  className="absolute right-1 top-1 rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white opacity-0 transition group-hover:opacity-100"
+                  aria-label="Eliminar foto"
+                  className="absolute right-1 top-1 rounded bg-black/80 px-2 py-1 text-xs font-bold text-white transition hover:bg-red-600"
                 >
                   ✕
                 </button>
@@ -365,9 +375,8 @@ export default function ProductForm({
                     <button
                       type="button"
                       title="Mover a la izquierda"
-                      disabled={isPending}
                       onClick={() => moveImg(img, 'up')}
-                      className="rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white transition hover:bg-black disabled:opacity-40"
+                      className="rounded bg-black/80 px-2 py-1 text-xs font-bold text-white transition hover:bg-black"
                     >
                       ←
                     </button>
@@ -375,9 +384,8 @@ export default function ProductForm({
                   <button
                     type="button"
                     title="Mover a la derecha"
-                    disabled={isPending}
                     onClick={() => moveImg(img, 'down')}
-                    className="rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white transition hover:bg-black disabled:opacity-40"
+                    className="rounded bg-black/80 px-2 py-1 text-xs font-bold text-white transition hover:bg-black"
                   >
                     →
                   </button>
@@ -447,7 +455,7 @@ export default function ProductForm({
                   <button
                     type="button"
                     onClick={() => removePreview(i)}
-                    className="absolute right-1 top-1 rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white opacity-0 transition group-hover:opacity-100"
+                    className="absolute right-1 top-1 rounded bg-black/80 px-2 py-1 text-xs font-bold text-white transition hover:bg-red-600"
                   >
                     ✕
                   </button>

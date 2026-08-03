@@ -93,27 +93,23 @@ async function uploadImages(
   files: FormDataEntryValue[]
 ): Promise<{ urls: string[]; failed: number }> {
   const supabase = await createClient()
-  const urls: string[] = []
-  let failed = 0
-
-  for (const file of files) {
-    if (!(file instanceof File) || file.size === 0) continue
-    if (file.size > 5 * 1024 * 1024) {
-      failed += 1
-      continue
-    }
-    const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
-    const path = `${productId}/${crypto.randomUUID()}.${ext}`
-    const { error } = await supabase.storage
-      .from('productos')
-      .upload(path, file, { upsert: false })
-    if (error) {
-      failed += 1
-    } else {
+  const results = await Promise.all(
+    files.map(async (file) => {
+      if (!(file instanceof File) || file.size === 0) return null
+      if (file.size > 5 * 1024 * 1024) return 'too-big'
+      const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
+      const path = `${productId}/${crypto.randomUUID()}.${ext}`
+      const { error } = await supabase.storage
+        .from('productos')
+        .upload(path, file, { upsert: false })
+      if (error) return null
       const { data } = supabase.storage.from('productos').getPublicUrl(path)
-      urls.push(data.publicUrl)
-    }
-  }
+      return data.publicUrl
+    })
+  )
+
+  const urls = results.filter((r): r is string => typeof r === 'string')
+  const failed = results.filter((r) => r === 'too-big' || r === null).length
   return { urls, failed }
 }
 
