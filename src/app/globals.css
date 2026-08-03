@@ -110,7 +110,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee-ltr,
   .animate-pulse-glow,
   .animate-float-blob,
   .shine-sweep::after {
