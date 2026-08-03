@@ -31,5 +31,6 @@ export function buildWhatsAppMessage(items: CartItem[], siteName: string): strin
 }
 
 export function buildWhatsAppUrl(number: string, message: string): string {
-  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`
+  // No usar wa.me: su redirect re-codifica el texto y convierte emojis en � (bug conocido en desktop/web).
+  return `https://api.whatsapp.com/send?phone=${number}&text=${encodeURIComponent(message)}`
 }

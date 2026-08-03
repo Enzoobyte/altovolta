@@ -7,6 +7,7 @@ import {
   FacebookIcon,
   TikTokIcon,
 } from '@/components/store/icons'
+import { buildWhatsAppUrl } from '@/lib/whatsapp'
 
 export const metadata: Metadata = { title: 'Contacto' }
 
@@ -36,7 +37,7 @@ export default async function ContactPage() {
 
   const whatsappUrl =
     settings.whatsapp_number &&
-    `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent('¡Hola Altovolta! 👋')}`
+    buildWhatsAppUrl(settings.whatsapp_number, '¡Hola Altovolta! 👋')
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-14 lg:px-8">

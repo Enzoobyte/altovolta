@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getCategories, getSiteSettings } from '@/lib/site'
 import { ProductCard } from '@/components/store/product-card'
 import { WhatsAppIcon } from '@/components/store/icons'
+import { buildWhatsAppUrl } from '@/lib/whatsapp'
 import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
@@ -19,7 +20,7 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
 
   const whatsappUrl =
     settings.whatsapp_number &&
-    `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent('¡Hola Altovolta! 👋')}`
+    buildWhatsAppUrl(settings.whatsapp_number, '¡Hola Altovolta! 👋')
 
   let query = supabase
     .from('products')

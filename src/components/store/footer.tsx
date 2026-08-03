@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getSiteSettings } from '@/lib/site'
 import { WhatsAppIcon, InstagramIcon, FacebookIcon, TikTokIcon } from './icons'
+import { buildWhatsAppUrl } from '@/lib/whatsapp'
 
 export async function StoreFooter() {
   const settings = await getSiteSettings()
@@ -14,7 +15,7 @@ export async function StoreFooter() {
 
   const whatsappUrl =
     settings.whatsapp_number &&
-    `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent('¡Hola Altovolta! 👋')}`
+    buildWhatsAppUrl(settings.whatsapp_number, '¡Hola Altovolta! 👋')
 
   return (
     <footer className="border-t border-zinc-800 bg-black text-zinc-400">
