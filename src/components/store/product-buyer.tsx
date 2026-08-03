@@ -9,15 +9,18 @@ import type { ProductVariant } from '@/lib/types'
 export function ProductBuyer({
   product,
   variants,
-  images,
+  selectedColor,
+  onSelectColor,
+  imageForColor,
 }: {
   product: { id: string; slug: string; name: string; price: number }
   variants: ProductVariant[]
-  images: { url: string }[]
+  selectedColor: string | null
+  onSelectColor: (color: string) => void
+  imageForColor: string | null
 }) {
   const router = useRouter()
   const addItem = useCart((s) => s.addItem)
-  const firstImage = images[0]?.url ?? null
 
   const colors = useMemo(() => {
     const seen = new Set<string>()
@@ -30,12 +33,18 @@ export function ProductBuyer({
       .map((v) => ({ color: v.color, hex: v.color_hex }))
   }, [variants])
 
-  const [selectedColor, setSelectedColor] = useState<string | null>(
-    colors.length === 1 ? colors[0].color : null
-  )
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const [quantity, setQuantity] = useState(1)
   const [added, setAdded] = useState(false)
+
+  // Si cambia el color, se reinicia talle/cantidad (patrón "adjust state during render")
+  const [prevColor, setPrevColor] = useState(selectedColor)
+  if (prevColor !== selectedColor) {
+    setPrevColor(selectedColor)
+    setSelectedSize(null)
+    setQuantity(1)
+    setAdded(false)
+  }
 
   // Talles disponibles SOLO para el color elegido
   const sizesForColor = useMemo(() => {
@@ -55,13 +64,6 @@ export function ProductBuyer({
 
   const maxStock = selectedVariant?.stock ?? 0
 
-  function selectColor(color: string) {
-    setSelectedColor(color)
-    setSelectedSize(null)
-    setQuantity(1)
-    setAdded(false)
-  }
-
   function selectSize(size: string) {
     setSelectedSize(size)
     setQuantity(1)
@@ -75,7 +77,7 @@ export function ProductBuyer({
       slug: product.slug,
       name: product.name,
       price: product.price,
-      image: firstImage,
+      image: imageForColor,
       color: selectedColor,
       size: selectedVariant.size,
       quantity,
@@ -97,7 +99,7 @@ export function ProductBuyer({
             <button
               key={color}
               type="button"
-              onClick={() => selectColor(color)}
+              onClick={() => onSelectColor(color)}
               className={cn(
                 'flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition',
                 selectedColor === color

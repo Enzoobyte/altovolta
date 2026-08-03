@@ -162,16 +162,39 @@ export async function saveProduct(formData: FormData): Promise<ActionResult> {
     if (e) return { error: e.message }
   }
 
-  // Imágenes nuevas
+  // Imágenes nuevas (color opcional por foto, alineado por índice)
   if (files.length > 0) {
+    let imageColors: (string | null)[] = []
+    try {
+      imageColors = JSON.parse(String(formData.get('image_colors') ?? '[]'))
+    } catch {
+      imageColors = []
+    }
     const urls = await uploadImages(productId, files)
     if (urls.length > 0) {
       const { error: e } = await supabase.from('product_images').insert(
-        urls.map((url, i) => ({ product_id: productId, url, sort_order: i }))
+        urls.map((url, i) => ({
+          product_id: productId,
+          url,
+          color: imageColors[i]?.trim() || null,
+          sort_order: i,
+        }))
       )
       if (e) return { error: e.message }
     }
   }
+
+  revalidatePath('/', 'layout')
+  return { ok: true }
+}
+
+export async function updateImageColor(formData: FormData): Promise<ActionResult> {
+  const { supabase } = await requireAdmin()
+  const id = String(formData.get('id'))
+  const color = String(formData.get('color') ?? '').trim() || null
+
+  const { error } = await supabase.from('product_images').update({ color }).eq('id', id)
+  if (error) return { error: error.message }
 
   revalidatePath('/', 'layout')
   return { ok: true }

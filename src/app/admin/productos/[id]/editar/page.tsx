@@ -31,7 +31,7 @@ export default async function EditProductPage(props: { params: Promise<{ id: str
       .order('color', { ascending: true }),
     supabase
       .from('product_images')
-      .select('id, product_id, url, sort_order, created_at')
+      .select('id, product_id, url, color, sort_order, created_at')
       .eq('product_id', id)
       .order('sort_order', { ascending: true }),
   ])

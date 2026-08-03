@@ -31,6 +31,7 @@ export type ProductImage = {
   id: string
   product_id: string
   url: string
+  color: string | null
   sort_order: number
   created_at: string
 }

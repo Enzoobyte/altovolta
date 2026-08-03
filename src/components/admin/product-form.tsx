@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { saveProduct, deleteProductImage } from '@/app/admin/actions'
+import { saveProduct, deleteProductImage, updateImageColor } from '@/app/admin/actions'
 import type { Category, ProductVariant, ProductImage } from '@/lib/types'
 import { slugify } from '@/lib/utils'
 
@@ -60,7 +60,9 @@ export default function ProductForm({
 
   const [newColor, setNewColor] = useState('')
   const [newSize, setNewSize] = useState('')
+  const [uploadColor, setUploadColor] = useState('')
   const [previewFiles, setPreviewFiles] = useState<File[]>([])
+  const [previewColors, setPreviewColors] = useState<(string | null)[]>([])
 
   const variantsJson = useMemo(() => {
     const list: { color: string; color_hex: string; size: string; stock: number }[] = []
@@ -140,6 +142,23 @@ export default function ProductForm({
     const result = await deleteProductImage(fd)
     if (result.error) setError(result.error)
     else router.refresh()
+  }
+
+  function changeImageColor(img: ProductImage, color: string) {
+    startTransition(async () => {
+      const fd = new FormData()
+      fd.set('id', img.id)
+      fd.set('color', color)
+      const result = await updateImageColor(fd)
+      if (result.error) setError(result.error)
+      else router.refresh()
+    })
+  }
+
+  function onPickFiles(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? [])
+    setPreviewFiles(files)
+    setPreviewColors(files.map(() => uploadColor || null))
   }
 
   return (
@@ -253,16 +272,29 @@ export default function ProductForm({
         <h2 className="font-semibold text-white">Fotos</h2>
 
         {product && product.images.length > 0 && (
-          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {product.images.map((img) => (
-              <div key={img.id} className="group relative">
+              <div key={img.id} className="group relative rounded-lg border border-zinc-800">
                 <Image
                   src={img.url}
                   alt=""
                   width={200}
                   height={200}
-                  className="aspect-square w-full rounded-lg border border-zinc-800 object-cover"
+                  className="aspect-square w-full rounded-t-lg object-cover"
                 />
+                <select
+                  value={img.color ?? ''}
+                  disabled={isPending}
+                  onChange={(e) => changeImageColor(img, e.target.value)}
+                  className="w-full rounded-b-lg border-0 border-t border-zinc-800 bg-zinc-950 px-2 py-1.5 text-xs text-zinc-300 outline-none focus:bg-zinc-900"
+                >
+                  <option value="">Foto general</option>
+                  {colors.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
                 <button
                   type="button"
                   onClick={() => removeImage(img)}
@@ -275,6 +307,30 @@ export default function ProductForm({
           </div>
         )}
 
+        <div className="space-y-2">
+          <label htmlFor="upload_color" className="block text-sm font-medium text-zinc-400">
+            Color de las fotos a subir
+          </label>
+          <select
+            id="upload_color"
+            value={uploadColor}
+            onChange={(e) => {
+              setUploadColor(e.target.value)
+              setPreviewColors((prev) => prev.map(() => e.target.value || null))
+            }}
+            className={inputCls}
+          >
+            <option value="">Foto general</option>
+            {colors.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <input type="hidden" name="image_colors" value={JSON.stringify(previewColors)} />
+
         <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-700 py-8 text-sm text-zinc-500 transition hover:border-red-600 hover:bg-zinc-950">
           <span className="text-2xl">＋</span>
           <span className="mt-1 font-medium">Subir fotos desde este dispositivo</span>
@@ -285,19 +341,23 @@ export default function ProductForm({
             accept="image/jpeg,image/png,image/webp,image/avif"
             multiple
             className="hidden"
-            onChange={(e) => setPreviewFiles(Array.from(e.target.files ?? []))}
+            onChange={onPickFiles}
           />
         </label>
 
         {previewFiles.length > 0 && (
-          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {previewFiles.map((file, i) => (
-              <img
-                key={i}
-                src={URL.createObjectURL(file)}
-                alt=""
-                className="aspect-square w-full rounded-lg border border-zinc-800 object-cover"
-              />
+              <div key={i} className="rounded-lg border border-zinc-800">
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt=""
+                  className="aspect-square w-full rounded-t-lg object-cover"
+                />
+                <p className="truncate rounded-b-lg border-t border-zinc-800 bg-zinc-950 px-2 py-1.5 text-xs text-zinc-400">
+                  {previewColors[i] || 'Foto general'}
+                </p>
+              </div>
             ))}
           </div>
         )}
