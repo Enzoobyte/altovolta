@@ -1,14 +1,15 @@
 import Link from 'next/link'
 import { getSiteSettings } from '@/lib/site'
+import { WhatsAppIcon, InstagramIcon, FacebookIcon, TikTokIcon } from './icons'
 
 export async function StoreFooter() {
   const settings = await getSiteSettings()
   const year = new Date().getFullYear()
 
   const socials = [
-    { label: 'Instagram', url: settings.instagram_url },
-    { label: 'Facebook', url: settings.facebook_url },
-    { label: 'TikTok', url: settings.tiktok_url },
+    { label: 'Instagram', url: settings.instagram_url, Icon: InstagramIcon },
+    { label: 'Facebook', url: settings.facebook_url, Icon: FacebookIcon },
+    { label: 'TikTok', url: settings.tiktok_url, Icon: TikTokIcon },
   ].filter((s) => s.url)
 
   const whatsappUrl =
@@ -66,8 +67,9 @@ export async function StoreFooter() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition hover:text-red-500"
+                  className="flex items-center gap-2 transition hover:text-red-500"
                 >
+                  <WhatsAppIcon className="h-4 w-4 text-[#25D366]" />
                   WhatsApp
                 </a>
               </li>
@@ -78,8 +80,9 @@ export async function StoreFooter() {
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition hover:text-red-500"
+                  className="flex items-center gap-2 transition hover:text-red-500"
                 >
+                  <s.Icon className="h-4 w-4 text-zinc-300" />
                   {s.label}
                 </a>
               </li>
@@ -91,8 +94,15 @@ export async function StoreFooter() {
         </div>
       </div>
 
-      <div className="border-t border-zinc-800 py-4 text-center text-xs text-zinc-600">
-        © {year} {settings.site_name} · Pedidos por WhatsApp
+      <div className="flex items-center justify-center gap-2 border-t border-zinc-800 py-4 text-center text-xs text-zinc-600">
+        <span>
+          © {year} {settings.site_name}
+        </span>
+        <span className="text-zinc-800">·</span>
+        <span className="flex items-center gap-1.5">
+          <WhatsAppIcon className="h-3 w-3 text-[#25D366]" />
+          Pedidos por WhatsApp
+        </span>
       </div>
     </footer>
   )

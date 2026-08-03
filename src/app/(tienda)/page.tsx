@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { getCategories, getSiteSettings } from '@/lib/site'
 import { ProductCard } from '@/components/store/product-card'
+import { WhatsAppIcon } from '@/components/store/icons'
 import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
@@ -15,6 +16,10 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
   const { cat } = await props.searchParams
   const supabase = await createClient()
   const [settings, categories] = await Promise.all([getSiteSettings(), getCategories()])
+
+  const whatsappUrl =
+    settings.whatsapp_number &&
+    `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent('¡Hola Altovolta! 👋')}`
 
   let query = supabase
     .from('products')
@@ -59,12 +64,25 @@ export default async function HomePage(props: { searchParams: Promise<{ cat?: st
           <p className="mt-4 max-w-xl text-zinc-300">
             {settings.about_text || 'Ropa con actitud. Elegí tus prendas y pedí directo por WhatsApp.'}
           </p>
-          <a
-            href="#tienda"
-            className="mt-8 rounded-full bg-red-600 px-8 py-3 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
-          >
-            Ver catálogo
-          </a>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="#tienda"
+              className="rounded-full bg-red-600 px-8 py-3 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
+            >
+              Ver catálogo
+            </a>
+            {whatsappUrl && (
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-full border border-[#25D366]/50 px-6 py-3 text-sm font-bold uppercase tracking-wide text-[#25D366] transition hover:bg-[#25D366] hover:text-black"
+              >
+                <WhatsAppIcon className="h-4 w-4" />
+                WhatsApp
+              </a>
+            )}
+          </div>
         </div>
       </section>
 

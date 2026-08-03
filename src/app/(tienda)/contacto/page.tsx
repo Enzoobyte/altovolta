@@ -1,6 +1,12 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { getSiteSettings } from '@/lib/site'
+import {
+  WhatsAppIcon,
+  InstagramIcon,
+  FacebookIcon,
+  TikTokIcon,
+} from '@/components/store/icons'
 
 export const metadata: Metadata = { title: 'Contacto' }
 
@@ -11,17 +17,20 @@ export default async function ContactPage() {
     {
       label: 'Instagram',
       url: settings.instagram_url,
-      icon: '📷',
+      Icon: InstagramIcon,
+      color: '#E4405F',
     },
     {
       label: 'Facebook',
       url: settings.facebook_url,
-      icon: '👥',
+      Icon: FacebookIcon,
+      color: '#1877F2',
     },
     {
       label: 'TikTok',
       url: settings.tiktok_url,
-      icon: '🎵',
+      Icon: TikTokIcon,
+      color: '#ffffff',
     },
   ].filter((s) => s.url)
 
@@ -45,16 +54,18 @@ export default async function ContactPage() {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition hover:border-red-600 hover:shadow-lg hover:shadow-red-950/40"
+            className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition hover:border-[#25D366] hover:shadow-lg hover:shadow-green-950/40"
           >
-            <span className="text-2xl">💬</span>
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#25D366]/10">
+              <WhatsAppIcon className="h-6 w-6 text-[#25D366]" />
+            </span>
             <p className="mt-3 font-bold text-white">WhatsApp</p>
             <p className="mt-1 text-sm text-zinc-400">
               {settings.whatsapp_number
                 ? `+${settings.whatsapp_number.replace(/(\d{2})(\d{3})(\d{3})(\d{4})/, '$1 $2 $3 $4')}`
                 : 'Chateá con el local'}
             </p>
-            <p className="mt-2 text-sm font-medium text-red-500 group-hover:underline">
+            <p className="mt-2 text-sm font-medium text-[#25D366] group-hover:underline">
               Escribinos →
             </p>
           </a>
@@ -90,7 +101,12 @@ export default async function ContactPage() {
             rel="noopener noreferrer"
             className="group rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition hover:border-red-600 hover:shadow-lg hover:shadow-red-950/40"
           >
-            <span className="text-2xl">{s.icon}</span>
+            <span
+              className="flex h-12 w-12 items-center justify-center rounded-xl"
+              style={{ backgroundColor: `${s.color}1a` }}
+            >
+              <s.Icon className="h-6 w-6" style={{ color: s.color }} />
+            </span>
             <p className="mt-3 font-bold text-white">{s.label}</p>
             <p className="mt-1 break-all text-sm text-zinc-400">
               {s.url.replace(/^https?:\/\//, '')}

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { formatPrice, firstOrNull } from '@/lib/utils'
 import { ProductViewer } from '@/components/store/product-viewer'
+import { WhatsAppIcon } from '@/components/store/icons'
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>
@@ -83,7 +84,14 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
           <ol className="mt-2 list-decimal space-y-1 pl-5">
             <li>Elegí color, talle y cantidad.</li>
             <li>Agregá al carrito lo que quieras.</li>
-            <li>Cuando termines, enviá el pedido por WhatsApp y te respondemos la confirmación.</li>
+            <li>
+              Cuando termines, enviá el pedido por{' '}
+              <span className="inline-flex items-center gap-1 font-medium text-[#25D366]">
+                <WhatsAppIcon className="h-3.5 w-3.5" />
+                WhatsApp
+              </span>{' '}
+              y te respondemos la confirmación.
+            </li>
           </ol>
         </div>
       </ProductViewer>

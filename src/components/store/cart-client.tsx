@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useCart } from '@/stores/cart'
 import { formatPrice } from '@/lib/utils'
 import { buildWhatsAppMessage, buildWhatsAppUrl } from '@/lib/whatsapp'
+import { WhatsAppIcon } from './icons'
 
 export function CartClient({
   whatsappNumber,
@@ -133,11 +134,9 @@ export function CartClient({
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-full bg-red-600 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-red-500"
+              className="flex items-center justify-center gap-2 rounded-full bg-[#25D366] py-3.5 text-sm font-bold uppercase tracking-wide text-black transition hover:bg-[#1fb959]"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm5.83 14.16c-.24.68-1.42 1.3-1.98 1.38-.51.07-1.15.1-1.85-.11-.43-.13-.98-.32-1.69-.63-2.99-1.3-4.94-4.32-5.09-4.52-.15-.2-1.22-1.62-1.22-3.09 0-1.47.77-2.19 1.05-2.49.27-.3.6-.37.8-.37.2 0 .4 0 .57.01.19.01.43-.07.68.52.25.6.86 2.11.94 2.26.08.15.13.33.03.53-.1.2-.15.32-.3.5-.15.17-.32.39-.45.52-.15.15-.31.31-.13.61.18.3.79 1.3 1.7 2.11 1.17 1.04 2.15 1.36 2.46 1.52.3.15.48.13.66-.08.17-.2.76-.88.96-1.19.2-.3.4-.25.68-.15.27.1 1.75.83 2.05.98.3.15.5.22.58.35.07.13.07.74-.17 1.42z" />
-              </svg>
+              <WhatsAppIcon className="h-5 w-5" />
               Enviar pedido por WhatsApp
             </a>
           ) : (
