@@ -17,3 +17,20 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
+
+/* Marquee LTR: la frase cruza la barra de izquierda a derecha en bucle */
+@keyframes marquee-ltr {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100vw);
+  }
+}
+
+.animate-marquee-ltr {
+  animation-name: marquee-ltr;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: 15s;
+}

@@ -9,8 +9,15 @@ export async function StoreHeader() {
   return (
     <div className="sticky top-0 z-30">
       {settings.announcement_text && (
-        <div className="bg-red-600 py-1.5 text-center text-xs font-semibold uppercase tracking-wider text-white">
-          {settings.announcement_text}
+        <div className="overflow-hidden bg-red-600 py-1.5">
+          <span
+            className="animate-marquee-ltr inline-block whitespace-nowrap text-xs font-semibold uppercase tracking-wider text-white"
+            style={{
+              animationDuration: `${Math.max(10, Math.round(settings.announcement_text.length / 6))}s`,
+            }}
+          >
+            {settings.announcement_text}
+          </span>
         </div>
       )}
       <header className="border-b border-zinc-800 bg-black/90 backdrop-blur">
