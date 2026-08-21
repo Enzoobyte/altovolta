@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<title>Altovolta — Promo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; }
+  body {
+    background: #09090b;
+    font-family: "Segoe UI", Arial, system-ui, sans-serif;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; color: #fafafa;
+  }
+  .glow-red {
+    position: absolute; width: 820px; height: 820px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(220,38,38,0.22), transparent 65%);
+    top: -220px; left: 50%; transform: translateX(-50%);
+  }
+  .glow-2 {
+    position: absolute; width: 900px; height: 900px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(220,38,38,0.10), transparent 65%);
+    bottom: -340px; right: -200px;
+  }
+  .glow-3 {
+    position: absolute; width: 700px; height: 700px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(160,160,170,0.07), transparent 65%);
+    bottom: -260px; left: -180px;
+  }
+
+  .content { position: relative; display: flex; flex-direction: column; align-items: center; }
+
+  .season {
+    font-size: 22px; font-weight: 700; letter-spacing: 0.42em; text-indent: 0.42em;
+    color: #dc2626; text-transform: uppercase; margin-bottom: 26px;
+  }
+  .brand {
+    font-size: 150px; font-weight: 900; line-height: 1; letter-spacing: 0.01em;
+    text-transform: uppercase; user-select: none;
+  }
+  .brand .red { color: #dc2626; text-shadow: 0 0 60px rgba(220,38,38,0.55); }
+  .tagline {
+    margin-top: 28px; font-size: 30px; color: #a1a1aa; text-align: center;
+  }
+  .chips { margin-top: 36px; display: flex; gap: 18px; align-items: center; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-size: 22px; font-weight: 600; letter-spacing: 0.02em;
+    padding: 13px 26px; border-radius: 999px;
+  }
+  .chip-wa { background: #25D366; color: #052e16; }
+  .chip-url { border: 1px solid #3f3f46; color: #d4d4d8; background: rgba(24,24,27,0.7); }
+  .wa-dot { width: 12px; height: 12px; border-radius: 50%; background: #052e16; }
+
+  /* ---------- LAPTOP ---------- */
+  .devices { margin-top: 78px; display: flex; align-items: flex-end; position: relative; }
+  .laptop { position: relative; }
+  .laptop-screen {
+    width: 1020px; height: 636px; border-radius: 20px;
+    background: #18181b; border: 1px solid #3f3f46;
+    padding: 16px; box-shadow: 0 60px 120px -40px rgba(0,0,0,0.9);
+  }
+  .laptop-inner {
+    width: 100%; height: 100%; border-radius: 12px; overflow: hidden;
+    background: #000; position: relative;
+  }
+  .browser-chrome {
+    height: 42px; background: #1f1f23; display: flex; align-items: center; gap: 10px;
+    padding: 0 16px; border-bottom: 1px solid #333;
+  }
+  .dot { width: 13px; height: 13px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
+  .url-pill {
+    flex: 1; max-width: 480px; margin: 0 auto; background: #2c2c30;
+    border-radius: 999px; padding: 7px 20px; font-size: 15px; color: #b4b4bc;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .url-pill .lock { color: #7dd3a8; font-size: 13px; }
+  .browser-body { position: relative; height: calc(100% - 42px); }
+  .iframe-wrap { position: absolute; top: 0; left: 0; transform-origin: top left; }
+  .laptop-base {
+    width: 1180px; height: 20px; margin: -6px auto 0; position: relative;
+    background: linear-gradient(#26262b, #1c1c1f);
+    border-radius: 0 0 26px 26px; border: 1px solid #3f3f46; border-top: none;
+  }
+  .laptop-base::after {
+    content: ""; position: absolute; left: 50%; transform: translateX(-50%); top: 0;
+    width: 90px; height: 4px; border-radius: 4px; background: #101013;
+  }
+  .laptop-shadow {
+    width: 1000px; height: 46px; margin: 22px auto 0;
+    background: radial-gradient(ellipse, rgba(0,0,0,0.75), transparent 70%);
+  }
+
+  /* ---------- PHONE ---------- */
+  .phone {
+    position: relative; margin-left: -60px; margin-bottom: 46px; z-index: 5;
+    width: 396px; height: 800px; border-radius: 52px; padding: 10px;
+    background: #18181b; border: 1px solid #3f3f46;
+    box-shadow: 0 60px 120px -40px rgba(0,0,0,0.9);
+  }
+  .phone-inner {
+    width: 100%; height: 100%; border-radius: 42px; overflow: hidden;
+    background: #000; position: relative;
+  }
+  .phone-island {
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    width: 128px; height: 34px; background: #000; border-radius: 999px; z-index: 10;
+  }
+  .phone-browser {
+    height: 60px; background: #1f1f23; display: flex; align-items: center; justify-content: center;
+    padding: 0 16px; border-bottom: 1px solid #333;
+  }
+  .phone-url {
+    background: #2c2c30; border-radius: 999px; padding: 6px 18px;
+    font-size: 14px; color: #b4b4bc; display: flex; align-items: center; gap: 6px;
+  }
+  .phone-url .lock { color: #7dd3a8; }
+  .phone-body { position: relative; height: calc(100% - 60px); }
+
+  .foot {
+    position: absolute; bottom: 30px; left: 0; right: 0; text-align: center;
+    font-size: 18px; letter-spacing: 0.12em; color: #52525b; text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+  <div class="glow-red"></div>
+  <div class="glow-2"></div>
+  <div class="glow-3"></div>
+
+  <div class="content">
+    <div class="season">Nueva temporada 2026</div>
+    <h1 class="brand">alt0<span class="red">volta</span></h1>
+    <p class="tagline">Ropa con actitud. Elegí tus prendas y pedí directo por WhatsApp.</p>
+    <div class="chips">
+      <span class="chip chip-wa"><span class="wa-dot"></span>Pedidos por WhatsApp</span>
+      <span class="chip chip-url">altovolta.vercel.app</span>
+    </div>
+
+    <div class="devices">
+      <div class="laptop">
+        <div class="laptop-screen">
+          <div class="laptop-inner">
+            <div class="browser-chrome">
+              <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+              <span class="url-pill"><span class="lock">🔒</span>altovolta.vercel.app</span>
+            </div>
+            <div class="browser-body">
+              <div class="iframe-wrap" id="laptop-wrap"></div>
+            </div>
+          </div>
+        </div>
+        <div class="laptop-base"></div>
+        <div class="laptop-shadow"></div>
+      </div>
+
+      <div class="phone">
+        <div class="phone-inner">
+          <div class="phone-island"></div>
+          <div class="phone-browser">
+            <span class="phone-url"><span class="lock">🔒</span>altovolta.vercel.app</span>
+          </div>
+          <div class="phone-body">
+            <div class="iframe-wrap" id="phone-wrap"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">Altovolta · Ropa con actitud</div>
+
+<script>
+  (function () {
+    var URL_SITE = "https://altovolta.vercel.app/";
+
+    // Laptop: la web en desktop se muestra a 1240px de ancho y se escala para caber
+    var laptopInnerW = 1020 - 32;
+    var laptopInnerH = 636 - 32 - 42;
+    var laptopIframeW = 1240, laptopIframeH = 900;
+    var laptopScale = Math.min(laptopInnerW / laptopIframeW, laptopInnerH / laptopIframeH);
+    var lw = document.createElement("iframe");
+    lw.src = URL_SITE;
+    lw.style.width = laptopIframeW + "px";
+    lw.style.height = laptopIframeH + "px";
+    lw.style.transform = "scale(" + laptopScale + ")";
+    lw.style.border = "0";
+    document.getElementById("laptop-wrap").appendChild(lw);
+
+    // Phone: la web en mobile (~400px) se escala para caber
+    var phoneInnerW = 396 - 20;
+    var phoneInnerH = 800 - 20 - 60;
+    var phoneIframeW = 400, phoneIframeH = 860;
+    var phoneScale = Math.min(phoneInnerW / phoneIframeW, phoneInnerH / phoneIframeH);
+    var pw = document.createElement("iframe");
+    pw.src = URL_SITE;
+    pw.style.width = phoneIframeW + "px";
+    pw.style.height = phoneIframeH + "px";
+    pw.style.transform = "scale(" + phoneScale + ")";
+    pw.style.border = "0";
+    document.getElementById("phone-wrap").appendChild(pw);
+  })();
+</script>
+</body>
+</html>

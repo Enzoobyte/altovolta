@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Altovolta — Story</title>
+<link rel="stylesheet" href="social.css" />
+<style>
+  body { width: 1080px; height: 1920px; }
+  .brand { font-size: 172px; }
+  .tagline { margin-top: 30px; font-size: 32px; max-width: 880px; }
+  .chip { font-size: 24px; padding: 14px 28px; }
+  .wa-dot { width: 12px; height: 12px; }
+  .foot { bottom: 56px; font-size: 18px; }
+
+  .content { margin-top: -130px; }
+  .season { margin-bottom: 24px; font-size: 24px; }
+
+  .scene { width: 1080px; height: 1180px; margin-top: 30px; }
+
+  .floor-stage {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 430px;
+    perspective: 900px; perspective-origin: 50% 0%;
+  }
+  .grid-floor {
+    width: 100%; height: 430px; transform: rotateX(72deg);
+    transform-origin: bottom center;
+  }
+
+  .pedestal { top: 790px; width: 900px; height: 210px; margin-left: -450px; }
+
+  .a-mark { top: 300px; width: 225px; height: 355px; margin-left: -112px; }
+  .a-left, .a-right { width: 52px; }
+  .a-cross { height: 40px; }
+
+  .laptop { left: 60px; top: 620px; }
+  .laptop-wrap { transform: scale(0.88); }
+  .laptop-screen { width: 1020px; height: 636px; }
+  .laptop-base { width: 1160px; }
+
+  .phone { right: 30px; top: 780px; z-index: 5; }
+  .phone-wrap { transform: scale(0.74); }
+  .phone-frame { width: 396px; height: 800px; }
+
+  .prop-bag.bag1 { left: 720px; top: 1030px; width: 170px; height: 216px; z-index: 4; }
+  .prop-bag.bag1 .logo-a { font-size: 60px; }
+  .prop-bag.bag2 { left: 905px; top: 1100px; width: 122px; height: 152px; z-index: 3; }
+  .prop-bag.bag2 .logo-a { font-size: 42px; }
+  .prop-tag { left: 850px; top: 1005px; width: 128px; height: 172px; font-size: 58px; z-index: 2; }
+  .prop-tape { left: 560px; top: 1290px; width: 430px; height: 48px; z-index: 2; }
+
+  .cta {
+    position: absolute; left: 50%; transform: translateX(-50%); bottom: 260px;
+    font-size: 30px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #fff; background: #dc2626; border-radius: 999px; padding: 22px 60px;
+    box-shadow: 0 0 60px rgba(220,38,38,0.6);
+    z-index: 6;
+  }
+</style>
+</head>
+<body>
+  <div class="vignette"></div>
+  <div class="glow-top"></div>
+
+  <div class="content">
+    <div class="season">Nueva temporada 2026</div>
+    <h1 class="brand">alt0<span class="red">volta</span></h1>
+    <p class="tagline">Ropa con actitud. Elegí tus prendas y pedí directo por WhatsApp.</p>
+  </div>
+
+  <div class="scene">
+    <div class="floor-stage"><div class="grid-floor"></div></div>
+
+    <div class="pedestal"></div>
+    <div class="a-mark">
+      <span class="a-left"></span><span class="a-right"></span>
+      <span class="a-cross"></span>
+    </div>
+
+    <div class="laptop"><div class="laptop-wrap">
+      <div class="laptop-screen">
+        <div class="laptop-inner">
+          <div class="browser-chrome">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="url-pill"><span class="lock">🔒</span>altovolta.vercel.app</span>
+          </div>
+          <div class="browser-body"><div class="iframe-wrap" id="laptop-wrap"></div></div>
+        </div>
+      </div>
+      <div class="laptop-base"></div>
+    </div></div>
+
+    <div class="phone"><div class="phone-wrap">
+      <div class="phone-frame">
+        <div class="phone-inner">
+          <div class="phone-island"></div>
+          <div class="phone-browser">
+            <span class="phone-url"><span class="lock">🔒</span>altovolta.vercel.app</span>
+          </div>
+          <div class="phone-body"><div class="iframe-wrap" id="phone-wrap"></div></div>
+        </div>
+      </div>
+    </div></div>
+
+    <div class="prop-bag bag1"><span class="logo-a">A</span></div>
+    <div class="prop-bag bag2"><span class="logo-a">A</span></div>
+    <div class="prop-tag">A</div>
+    <div class="prop-tape"></div>
+  </div>
+
+  <div class="chips">
+    <span class="chip chip-wa"><span class="wa-dot"></span>Pedidos por WhatsApp</span>
+    <span class="chip chip-url">altovolta.vercel.app</span>
+  </div>
+
+  <div class="cta">Pedí por WhatsApp</div>
+
+  <div class="foot">Altovolta · Ropa con actitud</div>
+
+<script>
+  (function () {
+    var URL_SITE = "https://altovolta.vercel.app/";
+    function addIframe(id, w, h, scale) {
+      var f = document.createElement("iframe");
+      f.src = URL_SITE;
+      f.style.width = w + "px";
+      f.style.height = h + "px";
+      f.style.transform = "scale(" + scale + ")";
+      f.style.border = "0";
+      document.getElementById(id).appendChild(f);
+    }
+    addIframe("laptop-wrap", 1240, 900, 0.631);
+    addIframe("phone-wrap", 400, 860, 0.847);
+  })();
+</script>
+</body>
+</html>
